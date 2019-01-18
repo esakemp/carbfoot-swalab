@@ -1,0 +1,10 @@
+version: '3'
+services:
+  frontend:
+    image: node:10.15.0
+    command: sh -c "cd /usr/src/app && npm install && npm start"
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 3000:3000
+      - 35729:35729
