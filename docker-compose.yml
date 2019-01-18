@@ -15,3 +15,14 @@ services:
       - ./gateway:/usr/src/app
     ports:
       - 8000:8000
+  expo-app:
+    image: node:10.15.0
+    command: sh -c "cd /usr/src/app && npm install && npm start"
+    volumes:
+      - ./expo-app:/usr/src/app
+    ports:
+      - 19000:19000
+      - 19001:19001
+      - 19002:19002
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.106
