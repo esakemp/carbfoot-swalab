@@ -3,11 +3,7 @@ const fs = require('fs')
 const parse = require('csv-parser')
 const unzip = require('unzip')
 const path = require('path')
-
-const ZIP_URL = 'http://api.worldbank.org/v2/en/indicator/SP.POP.TOTL?downloadformat=csv'
-const FILE_PREFIX = 'API_SP.POP.TOTL_DS2'
-const ZIP_PATH = 'assets/tmp/populations.zip'
-const EXTRACT_DIR = 'assets/extracted'
+const { ZIP_URL, FILE_PREFIX, ZIP_PATH, EXTRACT_DIR } = require('./conf')
 
 const downloadZip = (url, filepath) => new Promise((resolve) => {
     http.get(url, response => {

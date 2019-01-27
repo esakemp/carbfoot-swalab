@@ -21,25 +21,30 @@ services:
     expose:
       - "8000"
     container_name: gateway
-  expo-app:
-    image: node:10.15.0
-    command: sh -c "cd /usr/src/app && npm install && npm start"
-    volumes:
-      - ./expo-app:/usr/src/app
-    ports:
-      - "19000:19000"
-      - "19001:19001"
-      - "19002:19002"
-    environment:
-      - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.106
-    container_name: expoapp
-  populationservice:
+  # expo-app:
+  #   image: node:10.15.0
+  #   command: sh -c "cd /usr/src/app && npm install && npm start"
+  #   volumes:
+  #     - ./expo-app:/usr/src/app
+  #   ports:
+  #     - "19000:19000"
+  #     - "19001:19001"
+  #     - "19002:19002"
+  #   environment:
+  #     - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.106
+  #   container_name: expoapp
+  population-service:
     image: node:10.15.0
     command: sh -c "cd /usr/src/app && npm install && npm run dev"
     volumes:
       - ./population:/usr/src/app
     ports:
       - "8001:8000"
-    expose:
-      - "8000"
     container_name: populationservice
+    depends_on:
+      - population-db
+  population-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    container_name: population-db
