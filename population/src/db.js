@@ -1,6 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-
-const MONGOURL = 'mongodb://population-db:27017'
+const { MONGOURL } = require('./conf')
 
 let mongodb
 

@@ -41,6 +41,8 @@ services:
     ports:
       - "8001:8000"
     container_name: populationservice
+    environment:
+      - MONGOURL=mongodb://population-db:27017
     depends_on:
       - population-db
   population-db:
