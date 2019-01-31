@@ -12,11 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "csv-parser": "^2.1.0",
     "express": "^4.16.4",
-    "mongodb": "^3.1.13",
-    "node-cron": "^2.0.3",
-    "unzip": "^0.1.11"
+    "mongodb": "^3.1.13"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
