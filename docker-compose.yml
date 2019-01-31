@@ -11,6 +11,7 @@ services:
     container_name: frontend
     environment:
       - REACT_APP_GATEWAY_URL=http://localhost:8000
+    restart: unless-stopped
   gateway:
     image: node:10.15.0
     command: sh -c "cd /usr/src/app && npm install && npm run dev"
@@ -21,6 +22,7 @@ services:
     expose:
       - "8000"
     container_name: gateway
+    restart: unless-stopped
   # expo-app:
   #   image: node:10.15.0
   #   command: sh -c "cd /usr/src/app && npm install && npm start"
@@ -33,21 +35,33 @@ services:
   #   environment:
   #     - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.106
   #   container_name: expoapp
-  population-service:
+  populationservice:
     image: node:10.15.0
     command: sh -c "cd /usr/src/app && npm install && npm run dev"
     volumes:
       - ./population:/usr/src/app
     ports:
       - "8001:8000"
+    expose:
+      - "8000"
     container_name: populationservice
     environment:
       - MONGOURL=mongodb://population-db:27017
       - DBNAME=population
     depends_on:
       - population-db
+    restart: unless-stopped
   population-db:
     image: mongo
     ports:
       - "27017:27017"
     container_name: population-db
+  updater:
+    image: node:10.15.0
+    command: sh -c "cd /usr/src/app && npm install && npm run dev"
+    volumes:
+      - ./updater:/usr/src/app
+    environment:
+      - POPULATION_POST_URL=http://populationservice:8000/populations
+    restart: unless-stopped
+    container_name: updater

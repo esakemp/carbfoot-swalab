@@ -1,5 +1,6 @@
 const parse = require('csv-parser')
 const { fetchDataStream } = require('./fetcher')
+const { publishPopulations, publishEmissions } = require('./publisher')
 const { POP_API_URL, POP_CSV_PREFIX, CO_API_URL, CO_CSV_PREFIX } = require('./conf')
 
 const recordsFromCsvStream = (stream) => new Promise((resolve) => {
@@ -18,12 +19,14 @@ const recordsFromCsvStream = (stream) => new Promise((resolve) => {
 
 const updatePopulations = async () => {
     const stream = await fetchDataStream(POP_API_URL, POP_CSV_PREFIX)
-    await recordsFromCsvStream(stream)
+    const records = await recordsFromCsvStream(stream)
+    await publishPopulations(records)
 }
 
 const updateCo2 = async () => {
     const stream = await fetchDataStream(CO_API_URL, CO_CSV_PREFIX)
-    await recordsFromCsvStream(stream)
+    const records = await recordsFromCsvStream(stream)
+    await publishEmissions(records)
 }
 
 module.exports = {
