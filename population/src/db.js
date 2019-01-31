@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient
-const { MONGOURL } = require('./conf')
+const { MONGOURL, DBNAME } = require('./conf')
 
 let mongodb
 
@@ -7,7 +7,7 @@ const collection = () => mongodb.collection('Population')
 
 const dbconnect = async () => {
     const client = await MongoClient.connect(MONGOURL)
-    mongodb = client.db('population')
+    mongodb = client.db(DBNAME)
 }
 
 const getPopulations = async () => {

@@ -43,6 +43,7 @@ services:
     container_name: populationservice
     environment:
       - MONGOURL=mongodb://population-db:27017
+      - DBNAME=population
     depends_on:
       - population-db
   population-db:

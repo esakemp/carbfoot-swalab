@@ -5,7 +5,8 @@ const {
     PORT = 8000,
     ZIP_URL = 'http://api.worldbank.org/v2/en/indicator/SP.POP.TOTL?downloadformat=csv',
     FILE_PREFIX = 'API_SP.POP.TOTL_DS2',
-    MONGOURL
+    MONGOURL,
+    DBNAME
 } = process.env
 
 const ZIP_PATH = 'assets/tmp/populations.zip'
@@ -14,5 +15,5 @@ const EXTRACT_DIR = 'assets/extracted'
 cron.validate(CRONSTRING)
 
 module.exports = {
-    CRONSTRING, PORT, ZIP_URL, FILE_PREFIX, ZIP_PATH, EXTRACT_DIR
+    CRONSTRING, PORT, ZIP_URL, FILE_PREFIX, ZIP_PATH, EXTRACT_DIR, MONGOURL, DBNAME
 }
