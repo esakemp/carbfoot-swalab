@@ -15,6 +15,9 @@
     "nodemon": "^1.18.9"
   },
   "dependencies": {
-    "node-cron": "^2.0.3"
+    "csv-parser": "^2.1.0",
+    "node-cron": "^2.0.3",
+    "tmp": "0.0.33",
+    "unzip": "^0.1.11"
   }
 }
