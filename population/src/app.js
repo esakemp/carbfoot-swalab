@@ -15,8 +15,7 @@ app.get('/populations', async (req, res) => {
 
 app.post('/populations', async (req, res) => {
     for (let population of req.body) {
-        const { code, ...rest } = population
-        await upsertPopulation({ _id: code, code, ...rest })
+        await upsertPopulation(population)
     }
     res.status(201).send()
 })

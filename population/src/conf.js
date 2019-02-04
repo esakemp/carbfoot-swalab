@@ -1,9 +1,8 @@
 const {
     PORT = 8000,
-    MONGOURL,
-    DBNAME
+    MONGOURL
 } = process.env
 
 module.exports = {
-    PORT, MONGOURL, DBNAME
+    PORT, MONGOURL
 }

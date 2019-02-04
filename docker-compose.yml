@@ -46,8 +46,7 @@ services:
       - "8000"
     container_name: populationservice
     environment:
-      - MONGOURL=mongodb://population-db:27017
-      - DBNAME=population
+      - MONGOURL=mongodb://population-db:27017/population
     depends_on:
       - population-db
     restart: unless-stopped

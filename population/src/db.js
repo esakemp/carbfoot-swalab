@@ -1,22 +1,35 @@
-const MongoClient = require('mongodb').MongoClient
-const { MONGOURL, DBNAME } = require('./conf')
+const mongoose = require('mongoose')
+const { MONGOURL } = require('./conf')
 
-let mongodb
+const dbconnect = () => new Promise(async (resolve, reject) => {
+    try {
+        await mongoose.connect(MONGOURL)
+        console.log('Connected to Mongo')
+        resolve()
+    } catch (error) {
+        console.error('Error connecting to Mongo', err)
+        reject(error)
+    }
+})
 
-const collection = () => mongodb.collection('Population')
+const populationSchema = new mongoose.Schema({
+    code: String,
+    name: String,
+    stats: {
+        type: Map,
+        of: String
+    }
+})
 
-const dbconnect = async () => {
-    const client = await MongoClient.connect(MONGOURL)
-    mongodb = client.db(DBNAME)
-}
+const Population = mongoose.model('Population', populationSchema)
 
 const getPopulations = async () => {
-    const cursor = await collection().find({}).toArray()
-    return cursor
+    const populations = await Population.find()
+    return populations
 }
 
 const upsertPopulation = async (population) => {
-    await collection().updateOne({ _id: population._id }, { $set: population }, { upsert: true })
+    await Population.findOneAndUpdate({ code: population.code }, population, { upsert: true })
 }
 
 module.exports = { dbconnect, getPopulations, upsertPopulation }
