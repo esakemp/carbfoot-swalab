@@ -2,7 +2,8 @@ const cron = require('node-cron')
 
 const {
     CRONSTRING = '*/30 * * * * *', // Every 5 seconds,
-    POPULATION_POST_URL
+    POPULATION_POST_URL,
+    EMISSION_POST_URL
 } = process.env
 
 const EXTRACT_DIR = 'assets/extracted'
@@ -20,5 +21,6 @@ module.exports = {
     POP_CSV_PREFIX,
     CO_API_URL,
     CO_CSV_PREFIX,
-    POPULATION_POST_URL
+    POPULATION_POST_URL,
+    EMISSION_POST_URL
 }

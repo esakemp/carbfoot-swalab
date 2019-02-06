@@ -1,5 +1,5 @@
 const axios = require('axios')
-const { POPULATION_POST_URL } = require('./conf')
+const { POPULATION_POST_URL, EMISSION_POST_URL } = require('./conf')
 
 const publishPopulations = async data => {
     try {
@@ -9,6 +9,12 @@ const publishPopulations = async data => {
     }
 }
 
-const publishEmissions = () => console.log('Carbon emission publishing not implemented!')
+const publishEmissions = async data => {
+    try {
+        await axios.post(EMISSION_POST_URL, data)
+    } catch (e) {
+        console.error('Publishing new emissions failed', e)
+    }
+}
 
 module.exports = { publishEmissions, publishPopulations }

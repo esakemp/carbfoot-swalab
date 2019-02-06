@@ -62,5 +62,6 @@ services:
       - ./updater:/usr/src/app
     environment:
       - POPULATION_POST_URL=http://populationservice:8000/populations
+      - EMISSION_POST_URL=http://populationservice:8000/emissions
     restart: unless-stopped
     container_name: updater

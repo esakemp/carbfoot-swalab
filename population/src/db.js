@@ -17,19 +17,81 @@ const populationSchema = new mongoose.Schema({
     name: String,
     stats: {
         type: Map,
-        of: String
+        of: Number
+    }
+})
+
+const emissionSchema = new mongoose.Schema({
+    code: String,
+    name: String,
+    stats: {
+        type: Map,
+        of: Number
+    }
+})
+
+const YearlyStatisticSchema = new mongoose.Schema({
+    year: String,
+    population: Number,
+    emissions: Number
+})
+
+YearlyStatisticSchema.virtual('normalized').get(function () {
+    return (this.emissions / this.population)
+})
+
+YearlyStatisticSchema.set('toJSON', { virtuals: true })
+YearlyStatisticSchema.set('toObject', { virtuals: true })
+
+const countryStatisticsSchema = new mongoose.Schema({
+    code: String,
+    name: String,
+    stats: {
+        type: Map,
+        of: YearlyStatisticSchema
     }
 })
 
 const Population = mongoose.model('Population', populationSchema)
 
-const getPopulations = async () => {
-    const populations = await Population.find()
-    return populations
-}
+const Emission = mongoose.model('Emission', emissionSchema)
+
+const CountryStatistics = mongoose.model('CountryStatistics', countryStatisticsSchema)
+
+const getPopulations = async () => Population.find()
 
 const upsertPopulation = async (population) => {
-    await Population.findOneAndUpdate({ code: population.code }, population, { upsert: true })
+    return Population.findOneAndUpdate({ code: population.code }, population, { upsert: true, new: true })
 }
 
-module.exports = { dbconnect, getPopulations, upsertPopulation }
+const getEmissions = async () => Emission.find()
+
+const upsertEmission = async (emission) => {
+    return Emission.findOneAndUpdate({ code: emission.code }, emission, { upsert: true, new: true })
+}
+
+const getCountryStatistics = async () => CountryStatistics.find()
+
+const getCountryStatistic = async code => CountryStatistics.find({ code })
+
+const upsertCountryStatistics = async (data) => {
+    const { stats, ...rest } = data
+    const countrystats = await CountryStatistics.findOneAndUpdate({ code: data.code }, rest, { upsert: true, new: true })
+    stats.forEach(({ year, ...updates }) => {
+        const old = countrystats.stats.get(year).toObject()
+        const stat = { ...old, ...updates }
+        countrystats.stats.set(year, stat)
+    })
+    return countrystats.save()
+}
+
+module.exports = {
+    dbconnect,
+    getPopulations,
+    upsertPopulation,
+    getEmissions,
+    upsertEmission,
+    getCountryStatistic,
+    getCountryStatistics,
+    upsertCountryStatistics
+}
