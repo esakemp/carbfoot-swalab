@@ -48,7 +48,8 @@ const countryStatisticsSchema = new mongoose.Schema({
     name: String,
     stats: {
         type: Map,
-        of: YearlyStatisticSchema
+        of: YearlyStatisticSchema,
+        default: new Map()
     }
 })
 
@@ -76,9 +77,10 @@ const getCountryStatistic = async code => CountryStatistics.find({ code })
 
 const upsertCountryStatistics = async (data) => {
     const { stats, ...rest } = data
-    const countrystats = await CountryStatistics.findOneAndUpdate({ code: data.code }, rest, { upsert: true, new: true })
+    const countrystats = await CountryStatistics.findOneAndUpdate({ code: data.code }, rest, { upsert: true, new: true, setDefaultsOnInsert: true })
     stats.forEach(({ year, ...updates }) => {
-        const old = countrystats.stats.get(year).toObject()
+        const yearstats = countrystats.stats.get(year)
+        const old = !yearstats ? {} : yearstats.toObject()
         const stat = { ...old, ...updates }
         countrystats.stats.set(year, stat)
     })
