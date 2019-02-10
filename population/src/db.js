@@ -73,7 +73,7 @@ const upsertEmission = async (emission) => {
 
 const getCountryStatistics = async () => CountryStatistics.find()
 
-const getCountryStatistic = async code => CountryStatistics.find({ code })
+const getCountryStatistic = async code => CountryStatistics.findOne({ code })
 
 const upsertCountryStatistics = async (data) => {
     const { stats, ...rest } = data

@@ -22,9 +22,9 @@ const RootQuery = new GraphQLObjectType({
         country: {
             type: CountryType,
             args: { code: { type: GraphQLString } },
-            resolve(parentValue, args) {
-                return axios.get(`http://populationservice:8000/countrystats/${args.code}`)
-                    .then(response => response)
+            async resolve(parentValue, args) {
+                const { data } = await axios.get(`http://populationservice:8000/countrystats/${args.code}`)
+                return data
             }
         }
     }
