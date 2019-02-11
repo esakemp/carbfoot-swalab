@@ -1,10 +1,12 @@
 const express = require('express')
 const cors = require('cors')
+const morgan = require('morgan')
 
 const PORT = 8000
 const FILEDIR = './files'
 
 const app = express()
+app.use(morgan('combined'))
 app.use(cors())
 
 app.get('/ping', (_, res) => {
