@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { ping } from './service'
+import axios from 'axios';
 
 const styles = theme => ({
   main: {
@@ -27,8 +28,22 @@ const styles = theme => ({
   }
 });
 
+const getCountry = () => {
+
+
+  axios
+    .get('http://populationservice:8000/countrystats/FIN')
+    .then(response => {
+      console.log('promise fulfilled')
+
+
+    })
+
+
+}
+
 class App extends Component {
-  state={
+  state = {
     result: `Click the button to test the connection to the gateway.`
   }
   handleClick = async () => {
@@ -53,7 +68,9 @@ class App extends Component {
             Ping
           </Button>
         </Paper>
+        {getCountry()}
       </div>
+
     );
   }
 }

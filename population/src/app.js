@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyparser = require('body-parser')
 const publisher = require('./publisher')
+const cors = require('cors')
 const { POPULATION_UPDATED, EMISSION_UPDATED } = require('./events')
 const { getPopulations, upsertPopulation, getEmissions, upsertEmission, getCountryStatistics, getCountryStatistic } = require('./db')
 const { updateCountryStatsFromEmission, updateCountryStatsFromPopulation } = require('./handlers')
@@ -13,6 +14,7 @@ publisher.subscribe(EMISSION_UPDATED, updateCountryStatsFromEmission)
 publisher.subscribe(POPULATION_UPDATED, updateCountryStatsFromPopulation)
 
 app.use(bodyparser.json({ limit: '50mb', extended: true }))
+app.use(cors())
 
 app.get('/populations', async (req, res) => {
     const populations = await getPopulations()
