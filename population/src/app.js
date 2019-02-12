@@ -1,4 +1,5 @@
 const express = require('express')
+const morgan = require('morgan')
 const bodyparser = require('body-parser')
 const publisher = require('./publisher')
 const cors = require('cors')
@@ -13,6 +14,7 @@ const app = express()
 publisher.subscribe(EMISSION_UPDATED, updateCountryStatsFromEmission)
 publisher.subscribe(POPULATION_UPDATED, updateCountryStatsFromPopulation)
 
+app.use(morgan('combined'))
 app.use(bodyparser.json({ limit: '50mb', extended: true }))
 app.use(cors())
 
