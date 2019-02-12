@@ -18,15 +18,25 @@ const recordsFromCsvStream = (stream) => new Promise((resolve) => {
 })
 
 const updatePopulations = async () => {
-    const stream = await fetchDataStream(POP_API_URL, POP_CSV_PREFIX)
-    const records = await recordsFromCsvStream(stream)
-    await publishPopulations(records)
+    try {
+        const stream = await fetchDataStream(POP_API_URL, POP_CSV_PREFIX)
+        const records = await recordsFromCsvStream(stream)
+        await publishPopulations(records)
+    } catch (e) {
+        console.error('Updating populations failed', e)
+    }
+
 }
 
 const updateCo2 = async () => {
-    const stream = await fetchDataStream(CO_API_URL, CO_CSV_PREFIX)
-    const records = await recordsFromCsvStream(stream)
-    await publishEmissions(records)
+    try {
+        const stream = await fetchDataStream(CO_API_URL, CO_CSV_PREFIX)
+        const records = await recordsFromCsvStream(stream)
+        await publishEmissions(records)
+    } catch (e) {
+        console.error('Updating emissions failed', e)
+    }
+
 }
 
 module.exports = {
