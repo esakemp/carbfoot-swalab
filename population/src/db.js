@@ -53,6 +53,14 @@ const countryStatisticsSchema = new mongoose.Schema({
     }
 })
 
+countryStatisticsSchema.set('toJSON', {
+    transform: document => {
+        const { code, name, stats } = document.toObject()
+        const json = { code, name, stats: [...stats.values()] }
+        return json
+    }
+})
+
 const Population = mongoose.model('Population', populationSchema)
 
 const Emission = mongoose.model('Emission', emissionSchema)
@@ -81,7 +89,7 @@ const upsertCountryStatistics = async (data) => {
     stats.forEach(({ year, ...updates }) => {
         const yearstats = countrystats.stats.get(year)
         const old = !yearstats ? {} : yearstats.toObject()
-        const stat = { ...old, ...updates }
+        const stat = { year, ...old, ...updates }
         countrystats.stats.set(year, stat)
     })
     return countrystats.save()
