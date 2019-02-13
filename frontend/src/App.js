@@ -1,10 +1,20 @@
-import React, { Component, useEffect } from 'react';
+import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { ping } from './service'
+
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo'
+import CountryList from './components/CountryList'
+import SingleCountry from './components/SingleCountry'
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8000/graphql'
+})
+
 
 const styles = theme => ({
   main: {
@@ -36,6 +46,7 @@ class App extends Component {
     const result = await ping()
     this.setState({ result })
   }
+
   render() {
     const { classes } = this.props
     return (
@@ -54,6 +65,11 @@ class App extends Component {
             Ping
           </Button>
         </Paper>
+        <ApolloProvider client={client}>
+          <SingleCountry code="ABW" />
+          <CountryList />
+        </ApolloProvider>
+
       </div>
 
     );
