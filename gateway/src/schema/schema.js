@@ -15,7 +15,8 @@ const StatsType = new GraphQLObjectType({
     fields: {
         year: { type: GraphQLString },
         population: { type: GraphQLInt },
-        emissions: { type: GraphQLFloat }
+        emissions: { type: GraphQLFloat },
+        normalized: {type: GraphQLFloat}
     }
 })
 

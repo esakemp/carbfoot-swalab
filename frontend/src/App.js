@@ -5,7 +5,10 @@ import Paper from '@material-ui/core/Paper';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { ping } from './service'
-import axios from 'axios';
+
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo'
+import countryList from './components/countryList'
 
 const styles = theme => ({
   main: {
@@ -28,19 +31,9 @@ const styles = theme => ({
   }
 });
 
-const getCountry = () => {
-
-
-  axios
-    .get('http://populationservice:8000/countrystats/FIN')
-    .then(response => {
-      console.log('promise fulfilled')
-
-
-    })
-
-
-}
+const client = new ApolloClient({
+  uri: 'http://localhost:8000/graphql'
+})
 
 class App extends Component {
   state = {
@@ -68,7 +61,9 @@ class App extends Component {
             Ping
           </Button>
         </Paper>
-        {getCountry()}
+        <ApolloProvider client={client}>
+          <div>test</div>
+        </ApolloProvider>
       </div>
 
     );
