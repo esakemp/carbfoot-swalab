@@ -4,10 +4,9 @@ import gql from 'graphql-tag'
 
 class countryList extends Component {
     renderCountries() {
-        return this.props.data.country
-            .map(country => <li>{country.name}</li>
-
-            )
+        console.log(this.props)
+        return this.props.data
+            .countries.map(country => <li>{country.name}</li>)
     }
 }
 

@@ -6,10 +6,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { ping } from './service'
 
-import ApolloClient from 'apollo-boost'
-import { ApolloProvider } from 'react-apollo'
-import countryList from './components/countryList'
-
 const styles = theme => ({
   main: {
     width: 'auto',
@@ -31,9 +27,6 @@ const styles = theme => ({
   }
 });
 
-const client = new ApolloClient({
-  uri: 'http://localhost:8000/graphql'
-})
 
 class App extends Component {
   state = {
@@ -61,9 +54,6 @@ class App extends Component {
             Ping
           </Button>
         </Paper>
-        <ApolloProvider client={client}>
-          <div>test</div>
-        </ApolloProvider>
       </div>
 
     );
