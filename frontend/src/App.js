@@ -9,61 +9,16 @@ import { render } from 'react-dom'
 
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider, Query } from 'react-apollo'
-import gql from 'graphql-tag'
 import Search from './Search'
+import fetchCountry from './queries/fetchCountry'
 
 const client = new ApolloClient({
   uri: 'http://localhost:8000/graphql'
 })
 
-const GET_COUNTRIES = gql`
-{
-  allCountries {
-      name
-      code
-  }
-}
-`
-
 //graphql stuff
-const Countries = ({ onCountrySelect }) => (
-
-  <Query query={GET_COUNTRIES}>
-    {({ loading, error, data }) => {
-      if (loading) return null
-      if (error) return `error! ${error.message}`
-
-      console.log(data.allCountries)
-
-      return (
-        <select name='country' onChange={onCountrySelect}>
-          {data.allCountries.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.name}
-            </option>
-          ))}
-        </select>
-      )
-    }}
-  </Query>
-)
-
-const GET_COUNTRY = gql`
-query findCountry($code: String!){
-  country(code:$code) {
-    name
-    code
-    stats{
-        year
-        population
-        emissions
-    }
-  }
-}
-`
-
 const Country = ({ code }) => (
-  <Query query={GET_COUNTRY}
+  <Query query={fetchCountry}
     variables={{ code }}
     notifyOnNetworkStatusChange>
     {({ loading, error, data, networkStatus }) => {
@@ -108,11 +63,10 @@ const styles = theme => ({
 
 class App extends Component {
 
-
   state = { selectedCountry: null }
 
-  onCountrySelect = ({ target }) => {
-    this.setState(() => ({ selectedCountry: target.value }))
+  onSelectCountry = (value) => {
+    this.setState({ selectedCountry: value })
   }
 
   // state = {
@@ -123,9 +77,9 @@ class App extends Component {
   //   this.setState({ result })
   // }
 
-
   render() {
     const { classes } = this.props
+
     return (
       <div className={classes.main}>
 
@@ -153,17 +107,13 @@ class App extends Component {
 
             {/* dropdown select */}
 
-            {/*{this.state.selectedCountry && (
+            <Search onSelectCountry={this.onSelectCountry} />          
+            {this.state.selectedCountry && (
               <Country code={this.state.selectedCountry} />
             )}
-            <Countries onCountrySelect={this.onCountrySelect} />*/}
-
-            <Search/>
           </div>
         </ApolloProvider>
-
       </div>
-
     );
   }
 }

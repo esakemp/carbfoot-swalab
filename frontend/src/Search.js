@@ -1,8 +1,7 @@
-import React, { useState, Component } from 'react'
+import React from 'react'
 import Downshift from 'downshift'
-import { graphql, renderToStringWithData } from 'react-apollo'
-import gql from 'graphql-tag'
-import SingleCountry from './components/SingleCountry'
+import { graphql } from 'react-apollo'
+import fetchAll from './queries/fetchAll'
 
 const BasicAutocomplete = ({ items, onChange }) => (
     <Downshift onChange={onChange} itemToString={item => (item ? item.name : '')}>
@@ -39,21 +38,11 @@ const BasicAutocomplete = ({ items, onChange }) => (
     </Downshift>
 )
 
-const Search = ({ data: { allCountries = [] } }) => (
+const Search = ({onSelectCountry, data: { allCountries = [] }}) => (
     <div>
         <BasicAutocomplete items={allCountries}
-            onChange={selectedItem => console.log(selectedItem)} />
+            onChange={selectedItem => onSelectCountry(selectedItem.code)} />
     </div>
 )
 
-const allCountriesQuery = gql`
-{
-    allCountries{
-        code
-        name
-    }
-}
-
-`
-
-export default graphql(allCountriesQuery)(Search)
+export default graphql(fetchAll)(Search)
