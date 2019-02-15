@@ -29,7 +29,7 @@ const BasicAutocomplete = ({ items, onChange }) => (
                     fontWeight: selectedItem === item.name ? 'bold' : 'normal'
                   }}
                 >
-                  {item.name}, {item.code}
+                  {item.name}
                 </div>
               ))}
           </div>
