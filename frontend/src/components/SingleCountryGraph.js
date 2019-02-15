@@ -4,23 +4,23 @@ import {
   HighchartsChart, Chart, withHighcharts, XAxis, YAxis, LineSeries, Tooltip, Legend, Title
 } from 'react-jsx-highcharts'
 
-const Graph = ({ emissions, population, country, category }) => (
+const SingleCountryGraph = ({ stats }) => (
   <HighchartsChart >
     <Chart marginBottom={100} />
-    <Title>{country}</Title>
+    <Title>{stats.country}</Title>
     <Tooltip shared />
     <XAxis tickPixelInterval={10}>
       <XAxis.Title>Year</XAxis.Title>
     </XAxis>
     <YAxis>
-      <YAxis.Title>{category}</YAxis.Title>
-      <LineSeries name='Emissions' data={emissions} />
+      <YAxis.Title>Emissions</YAxis.Title>
+      <LineSeries name='Emissions' data={stats.emissions} />
     </YAxis>
     <YAxis opposite>
-      <LineSeries name='Population' data={population} />
+      <LineSeries name='Population' data={stats.population} />
     </YAxis>
     <Legend verticalAlign='bottom' />
   </HighchartsChart>
 )
 
-export default withHighcharts(Graph, Highcharts)
+export default withHighcharts(SingleCountryGraph, Highcharts)

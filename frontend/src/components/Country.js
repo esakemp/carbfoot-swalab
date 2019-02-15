@@ -1,17 +1,17 @@
 import React from 'react'
 import { Query } from 'react-apollo'
-import Graph from './Graph'
+import SingleCountryGraph from './SingleCountryGraph'
 import fetchCountry from '../queries/fetchCountry'
 
 const getStatsFromData = ({ country }) => ({
-  name: country.name,
+  country: country.name,
   population: country.stats.map(stat => ({
     x: parseInt(stat.year),
-    y: parseInt(stat.population)
+    y: stat.population
   })),
   emissions: country.stats.map(stat => ({
     x: parseInt(stat.year),
-    y: parseInt(stat.emissions)
+    y: stat.emissions
   }))
 })
 
@@ -27,10 +27,8 @@ const Country = ({ code }) => (
       return (
         <div>
           {data.country.name}, {data.country.code}
-          <Graph
-            population={stats.population}
-            emissions={stats.emissions}
-            country={stats.name}
+          <SingleCountryGraph
+            stats={stats}
           />
         </div>
       )
