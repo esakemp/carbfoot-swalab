@@ -1,7 +1,7 @@
 import React from 'react'
 import Downshift from 'downshift'
 import { graphql } from 'react-apollo'
-import fetchAll from './queries/fetchAll'
+import fetchAll from '../queries/fetchAll'
 
 const BasicAutocomplete = ({ items, onChange }) => (
     <Downshift onChange={onChange} itemToString={item => (item ? item.name : '')}>
@@ -20,6 +20,7 @@ const BasicAutocomplete = ({ items, onChange }) => (
                             {items.filter(i => !inputValue || i.name
                                 .toLowerCase().includes(inputValue.toLowerCase()))
                                 .slice(0, 10).map((item, index) => (
+
                                     <div {...getItemProps({ item, index, key: item.code })}
                                         key={item.code}
                                         style={{
