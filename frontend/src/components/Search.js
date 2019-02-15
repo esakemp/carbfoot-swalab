@@ -20,12 +20,10 @@ const BasicAutocomplete = ({ items, onChange }) => (
             {items.filter(i => !inputValue || i.name
               .toLowerCase().includes(inputValue.toLowerCase()))
               .slice(0, 10).map((item, index) => (
-
                 <div {...getItemProps({ item, index, key: item.code })}
                   key={item.code}
                   style={{
-                    backgroundColor:
-                                                highlightedIndex === index ? 'gray' : 'white',
+                    backgroundColor: highlightedIndex === index ? 'gray' : 'white',
                     fontWeight: selectedItem === item.name ? 'bold' : 'normal'
                   }}
                 >
@@ -40,10 +38,8 @@ const BasicAutocomplete = ({ items, onChange }) => (
 )
 
 const Search = ({ onSelectCountry, data: { allCountries = [] } }) => (
-  <div>
-    <BasicAutocomplete items={allCountries}
-      onChange={selectedItem => onSelectCountry(selectedItem.code)} />
-  </div>
+  <BasicAutocomplete items={allCountries}
+    onChange={selectedItem => onSelectCountry(selectedItem.code)} />
 )
 
 export default graphql(fetchAll)(Search)

@@ -1,6 +1,19 @@
 import React from 'react'
 import { Query } from 'react-apollo'
+import Graph from './Graph'
 import fetchCountry from '../queries/fetchCountry'
+
+const getStatsFromData = ({ country }) => ({
+  name: country.name,
+  population: country.stats.map(stat => ({
+    x: parseInt(stat.year),
+    y: parseInt(stat.population)
+  })),
+  emissions: country.stats.map(stat => ({
+    x: parseInt(stat.year),
+    y: parseInt(stat.emissions)
+  }))
+})
 
 const Country = ({ code }) => (
   <Query query={fetchCountry}
@@ -10,13 +23,15 @@ const Country = ({ code }) => (
       if (networkStatus === 4) return 'refetching'
       if (loading) return null
       if (error) return `error! ${error.message}`
-
+      const stats = getStatsFromData(data)
       return (
         <div>
           {data.country.name}, {data.country.code}
-          <div>
-              population was {data.country.stats[0].population} in year {data.country.stats[0].year}
-          </div>
+          <Graph
+            population={stats.population}
+            emissions={stats.emissions}
+            country={stats.name}
+          />
         </div>
       )
     }}
