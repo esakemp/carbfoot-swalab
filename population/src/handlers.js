@@ -1,6 +1,7 @@
 const publisher = require('./publisher')
+const topten = require('./top10')
 const { upsertCountryStatistics } = require('./countrystats')
-const { COUNTRYSTATS_UPDATED } = require('./events')
+const { COUNTRYSTATS_UPDATED, TOP_EMISSIONS_UPDATED, TOP_PER_CAPITA_UPDATED } = require('./events')
 
 const updateCountryStatsFromEmission = async emission => {
     const { code, name } = emission
@@ -20,4 +21,18 @@ const updateCountryStatsFromPopulation = async population => {
     publisher.publish(COUNTRYSTATS_UPDATED, payload)
 }
 
-module.exports = { updateCountryStatsFromEmission, updateCountryStatsFromPopulation }
+const updateTopEmissionsFromCountryStats = async countrystat => {
+    const { code, stats } = countrystat
+    for (let [key, value] of [...stats.entries()]) {
+        const year = Number.parseInt(key)
+        if (year >= 2000) {
+            const { emissions, normalized } = value
+            const emissionsUpdated = await topten.saveTopEmissions(code, year, emissions)
+            const capitaUpdated = await topten.saveTopEmissionsPerCapita(code, year, normalized)
+            emissionsUpdated && publisher.publish(TOP_EMISSIONS_UPDATED, year)
+            capitaUpdated && publisher.publish(TOP_PER_CAPITA_UPDATED)
+        }
+    }
+}
+
+module.exports = { updateCountryStatsFromEmission, updateCountryStatsFromPopulation, updateTopEmissionsFromCountryStats }

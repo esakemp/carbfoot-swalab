@@ -49,8 +49,22 @@ const upsertCountryStatistics = async (data) => {
     return countrystats.save()
 }
 
+const getYearlyStatisticsForCodes = async (codes, year) => {
+    const stats = await CountryStatistics.find({
+        code: { $in: codes }
+    })
+    const result = stats.reduce((acc, next) => {
+        const { code, name, stats } = next
+        const { emissions, population, normalized } = stats.get(year).toObject()
+        const entry = { code, name, year, emissions, population, normalized }
+        return acc.concat(entry)
+    }, [])
+    return result
+}
+
 module.exports = {
     getAllCountryStatistics,
     getCountryStatistic,
-    upsertCountryStatistics
+    upsertCountryStatistics,
+    getYearlyStatisticsForCodes
 }
