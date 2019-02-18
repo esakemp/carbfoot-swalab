@@ -4,7 +4,9 @@ const bodyparser = require('body-parser')
 const publisher = require('./publisher')
 const cors = require('cors')
 const { POPULATION_UPDATED, EMISSION_UPDATED } = require('./events')
-const { getPopulations, upsertPopulation, getEmissions, upsertEmission, getCountryStatistics, getCountryStatistic } = require('./db')
+const { getPopulations, upsertPopulation,  } = require('./population')
+const { getEmissions, upsertEmission } = require('./emissions') 
+const { getAllCountryStatistics, getCountryStatistic, upsertCountryStatistics } = require('./countrystats')
 const { updateCountryStatsFromEmission, updateCountryStatsFromPopulation } = require('./handlers')
 const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
@@ -45,7 +47,7 @@ app.post('/emissions', async (req, res) => {
 })
 
 app.get('/countrystats', async (req, res) => {
-    const statistics = await getCountryStatistics()
+    const statistics = await getAllCountryStatistics()
     res.json(statistics)
 })
 

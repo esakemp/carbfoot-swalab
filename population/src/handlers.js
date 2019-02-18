@@ -1,5 +1,5 @@
 const publisher = require('./publisher')
-const { upsertCountryStatistics } = require('./db')
+const { upsertCountryStatistics } = require('./countrystats')
 const { COUNTRYSTATS_UPDATED } = require('./events')
 
 const updateCountryStatsFromEmission = async emission => {
