@@ -23,18 +23,6 @@ services:
       - "8000"
     container_name: gateway
     restart: unless-stopped
-  # expo-app:
-  #   image: node:10.15.0
-  #   command: sh -c "cd /usr/src/app && npm install && npm start"
-  #   volumes:
-  #     - ./expo-app:/usr/src/app
-  #   ports:
-  #     - "19000:19000"
-  #     - "19001:19001"
-  #     - "19002:19002"
-  #   environment:
-  #     - REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.106
-  #   container_name: expoapp
   populationservice:
     image: node:10.15.0
     command: sh -c "cd /usr/src/app && npm install && npm run dev"
@@ -76,4 +64,7 @@ services:
       - ./mock-wb-api:/usr/src/app
     restart: unless-stopped
     container_name: mock-wb-api
-
+  redis:
+    image: redis
+    expose:
+      - "6379"
