@@ -3,8 +3,10 @@ const morgan = require('morgan')
 const bodyparser = require('body-parser')
 const publisher = require('./publisher')
 const cors = require('cors')
+const countries = require('i18n-iso-countries')
+
 const { POPULATION_UPDATED, EMISSION_UPDATED, COUNTRYSTATS_UPDATED } = require('./events')
-const { getPopulations, upsertPopulation,  } = require('./population')
+const { getPopulations, upsertPopulation } = require('./population')
 const { getEmissions, upsertEmission } = require('./emissions') 
 const { getAllCountryStatistics, getCountryStatistic } = require('./countrystats')
 const { updateCountryStatsFromEmission, updateCountryStatsFromPopulation, updateTopEmissionsFromCountryStats } = require('./handlers')
@@ -28,7 +30,8 @@ app.get('/populations', async (req, res) => {
 })
 
 app.post('/populations', async (req, res) => {
-    for (let population of req.body) {
+    const populations = req.body.filter(({ code }) => countries.isValid(code))
+    for (let population of populations) {
         const updated = await upsertPopulation(population)
         publisher.publish(POPULATION_UPDATED, updated)
     }
@@ -41,7 +44,8 @@ app.get('/emissions', async (req, res) => {
 })
 
 app.post('/emissions', async (req, res) => {
-    for (let emission of req.body) {
+    const emissions = req.body.filter(({ code }) => countries.isValid(code))
+    for (let emission of emissions) {
         const updated = await upsertEmission(emission)
         publisher.publish(EMISSION_UPDATED, updated)
     }
