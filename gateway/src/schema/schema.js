@@ -5,14 +5,28 @@ const {
     GraphQLObjectType,
     GraphQLString,
     GraphQLSchema,
+    GraphQLList,
+    GraphQLInt,
+    GraphQLFloat
 } = graphql
+
+const StatsType = new GraphQLObjectType({
+    name: 'Stats',
+    fields: {
+        year: { type: GraphQLString },
+        population: { type: GraphQLInt },
+        emissions: { type: GraphQLFloat },
+        normalized: {type: GraphQLFloat}
+    }
+})
 
 const CountryType = new GraphQLObjectType({
     name: 'Country',
-    fields: {    
+    fields: {
         code: { type: GraphQLString },
         name: { type: GraphQLString },
-        
+        stats: { type: GraphQLList(StatsType) }
+
     }
 })
 
@@ -24,6 +38,13 @@ const RootQuery = new GraphQLObjectType({
             args: { code: { type: GraphQLString } },
             async resolve(parentValue, args) {
                 const { data } = await axios.get(`http://populationservice:8000/countrystats/${args.code}`)
+                return data
+            }
+        },
+        allCountries: {
+            type: new GraphQLList(CountryType),
+            async resolve(parentValue, args) {
+                const { data } = await axios.get('http://populationservice:8000/countrystats/')
                 return data
             }
         }

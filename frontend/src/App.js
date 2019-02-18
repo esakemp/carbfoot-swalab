@@ -1,11 +1,13 @@
-import React, { Component, useEffect } from 'react';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { ping } from './service'
-import axios from 'axios';
+import React, { Component } from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo'
+import Search from './components/Search'
+import Country from './components/Country'
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8000/graphql'
+})
 
 const styles = theme => ({
   main: {
@@ -26,53 +28,35 @@ const styles = theme => ({
     alignItems: 'center',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
   }
-});
+})
 
-const getCountry = () => {
-
-
-  axios
-    .get('http://populationservice:8000/countrystats/FIN')
-    .then(response => {
-      console.log('promise fulfilled')
-
-
-    })
-
-
-}
 
 class App extends Component {
-  state = {
-    result: `Click the button to test the connection to the gateway.`
+
+  state = { selectedCountry: null }
+
+  onSelectCountry = (value) => {
+    this.setState({ selectedCountry: value })
   }
-  handleClick = async () => {
-    const result = await ping()
-    this.setState({ result })
-  }
+
   render() {
     const { classes } = this.props
+
     return (
       <div className={classes.main}>
-        <CssBaseline />
-        <Paper className={classes.paper}>
-          <Typography variant="body1" paragraph>
-            {this.state.result}
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.handleClick}
-            fullWidth
-          >
-            Ping
-          </Button>
-        </Paper>
-        {getCountry()}
-      </div>
 
-    );
+        <ApolloProvider client={client}>
+          <div>
+            <h2>Country data</h2>
+            <Search onSelectCountry={this.onSelectCountry} />          
+            {this.state.selectedCountry && (
+              <Country code={this.state.selectedCountry} />
+            )}
+          </div>
+        </ApolloProvider>
+      </div>
+    )
   }
 }
 
-export default withStyles(styles)(App);
+export default withStyles(styles)(App)
