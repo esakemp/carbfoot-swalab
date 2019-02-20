@@ -16,7 +16,7 @@ const StatsType = new GraphQLObjectType({
         year: { type: GraphQLString },
         population: { type: GraphQLInt },
         emissions: { type: GraphQLFloat },
-        normalized: {type: GraphQLFloat}
+        normalized: { type: GraphQLFloat }
     }
 })
 
@@ -47,6 +47,26 @@ const RootQuery = new GraphQLObjectType({
                 const { data } = await axios.get('http://populationservice:8000/countrystats/')
                 return data
             }
+        },
+        countries: {
+            type: new GraphQLList(CountryType),
+            args: { codes: { type: new GraphQLList(GraphQLString) } },
+            async resolve(parentValue, args) {
+                
+                const promiseArray = args.codes.map(code => axios.get(`http://populationservice:8000/countrystats/${code}`))
+            
+                try {
+                    const countries = (
+                        await Promise.all(promiseArray)
+                    ).map(res => res.data)
+
+                    return countries
+                } catch(error) {
+                    console.error(error)
+                }
+
+            }
+
         }
     }
 })

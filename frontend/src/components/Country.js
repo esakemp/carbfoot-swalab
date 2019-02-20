@@ -26,7 +26,7 @@ const Country = ({ code }) => (
       const stats = getStatsFromData(data)
       return (
         <div>
-          {data.country.name}, {data.country.code}
+          {data.country.name}
           <SingleCountryGraph
             stats={stats}
           />

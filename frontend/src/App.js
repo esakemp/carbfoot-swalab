@@ -47,7 +47,7 @@ class App extends Component {
 
         <ApolloProvider client={client}>
           <div>
-            <h2>Country data</h2>
+            <h2>Carbon emissions</h2>
             <Search onSelectCountry={this.onSelectCountry} />          
             {this.state.selectedCountry && (
               <Country code={this.state.selectedCountry} />
