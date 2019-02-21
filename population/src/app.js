@@ -5,11 +5,22 @@ const publisher = require('./publisher')
 const cors = require('cors')
 const countries = require('i18n-iso-countries')
 
-const { POPULATION_UPDATED, EMISSION_UPDATED, COUNTRYSTATS_UPDATED } = require('./events')
+const {
+  POPULATION_UPDATED,
+  EMISSION_UPDATED,
+  COUNTRYSTATS_UPDATED
+} = require('./events')
 const { getPopulations, upsertPopulation } = require('./population')
 const { getEmissions, upsertEmission } = require('./emissions')
-const { getAllCountryStatistics, getCountryStatistic } = require('./countrystats')
-const { updateCountryStatsFromEmission, updateCountryStatsFromPopulation, updateTopEmissionsFromCountryStats } = require('./handlers')
+const {
+  getAllCountryStatistics,
+  getCountryStatistic
+} = require('./countrystats')
+const {
+  updateCountryStatsFromEmission,
+  updateCountryStatsFromPopulation,
+  updateTopEmissionsFromCountryStats
+} = require('./handlers')
 const topten = require('./top10')
 const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
@@ -81,9 +92,11 @@ app.get('*', async (req, res) => {
 const start = async () => {
   try {
     await dbconnect()
-    app.listen(PORT, () => console.log(`Population service listening on port ${PORT}!`))
+    app.listen(PORT, () =>
+      console.log(`Population service listening on port ${PORT}!`)
+    )
   } catch (e) {
-    throw (e)
+    throw e
   }
 }
 

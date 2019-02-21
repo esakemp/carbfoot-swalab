@@ -13,8 +13,11 @@ const Population = mongoose.model('Population', populationSchema)
 
 const getPopulations = async () => Population.find()
 
-const upsertPopulation = async (population) => {
-  return Population.findOneAndUpdate({ code: population.code }, population, { upsert: true, new: true })
+const upsertPopulation = async population => {
+  return Population.findOneAndUpdate({ code: population.code }, population, {
+    upsert: true,
+    new: true
+  })
 }
 
 module.exports = {

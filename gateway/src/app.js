@@ -8,10 +8,13 @@ const app = express()
 
 app.use(cors())
 
-app.use('/graphql', expressGraphQL({
+app.use(
+  '/graphql',
+  expressGraphQL({
     schema,
     graphiql: true
-}))
+  })
+)
 
 app.get('/', (req, res) => res.send('Hello, Esa!'))
 

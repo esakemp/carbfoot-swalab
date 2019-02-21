@@ -40,7 +40,8 @@ const redisSortedSet = REDISKEY => {
 }
 
 const emissions = year => redisSortedSet(REDIS_EMISSIONS(year))
-const emissionsPerCapita = year => redisSortedSet(REDIS_EMISSIONS_PER_CAPITA(year))
+const emissionsPerCapita = year =>
+  redisSortedSet(REDIS_EMISSIONS_PER_CAPITA(year))
 
 module.exports = {
   emissions,

@@ -13,8 +13,11 @@ const Emission = mongoose.model('Emission', emissionSchema)
 
 const getEmissions = async () => Emission.find()
 
-const upsertEmission = async (emission) => {
-  return Emission.findOneAndUpdate({ code: emission.code }, emission, { upsert: true, new: true })
+const upsertEmission = async emission => {
+  return Emission.findOneAndUpdate({ code: emission.code }, emission, {
+    upsert: true,
+    new: true
+  })
 }
 
 module.exports = {

@@ -6,5 +6,8 @@ const {
 } = process.env
 
 module.exports = {
-  PORT, MONGOURL, REDISURL, REDISPORT
+  PORT,
+  MONGOURL,
+  REDISURL,
+  REDISPORT
 }

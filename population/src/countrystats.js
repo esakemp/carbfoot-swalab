@@ -6,8 +6,8 @@ const YearlyStatisticSchema = new mongoose.Schema({
   emissions: Number
 })
 
-YearlyStatisticSchema.virtual('normalized').get(function () {
-  return (this.emissions / this.population)
+YearlyStatisticSchema.virtual('normalized').get(function() {
+  return this.emissions / this.population
 })
 
 YearlyStatisticSchema.set('toJSON', { virtuals: true })
@@ -31,15 +31,22 @@ countryStatisticsSchema.set('toJSON', {
   }
 })
 
-const CountryStatistics = mongoose.model('CountryStatistics', countryStatisticsSchema)
+const CountryStatistics = mongoose.model(
+  'CountryStatistics',
+  countryStatisticsSchema
+)
 
 const getAllCountryStatistics = async () => CountryStatistics.find()
 
 const getCountryStatistic = async code => CountryStatistics.findOne({ code })
 
-const upsertCountryStatistics = async (data) => {
+const upsertCountryStatistics = async data => {
   const { stats, ...rest } = data
-  const countrystats = await CountryStatistics.findOneAndUpdate({ code: data.code }, rest, { upsert: true, new: true, setDefaultsOnInsert: true })
+  const countrystats = await CountryStatistics.findOneAndUpdate(
+    { code: data.code },
+    rest,
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  )
   stats.forEach(({ year, ...updates }) => {
     const yearstats = countrystats.stats.get(year)
     const old = !yearstats ? {} : yearstats.toObject()
