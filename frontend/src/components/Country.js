@@ -1,7 +1,8 @@
 import React from 'react'
 import { Query } from 'react-apollo'
+
 import SingleCountryGraph from './SingleCountryGraph'
-import fetchCountry from '../queries/fetchCountry'
+import MultiCountryGraph from './MultiCountryGraph'
 import fetchCountryWithList from '../queries/fetchCountryWithList';
 
 const getStatsFromData = ({ country }) => ({
@@ -18,15 +19,8 @@ const getStatsFromData = ({ country }) => ({
 
 function Country({ codes }) {
 
-  console.log("country.js", codes)
 
   if (codes.length > 1) {
-    return (
-      <div>
-        W.I.P.
-      </div>
-    )
-  } else {
     return (
       <Query query={fetchCountryWithList}
         variables={{ codes }}
@@ -35,18 +29,44 @@ function Country({ codes }) {
           if (networkStatus === 4) return 'refetching'
           if (loading) return null
           if (error) return `error! ${error.message}`
-          const countries = data.countries.map(country => country)
-          const stats = getStatsFromData(countries[0])
-          console.log(countries[0])
+
+          const countries = data.countries.map(country => ({country:{name: country.name, code: country.code, stats: country.stats}}))
+          const countryStats = countries.map(country => getStatsFromData(country))
+          
           return (
             <div>
-              {data.countries[0].name}
+              <MultiCountryGraph statsArray={countryStats}/>
+            </div>
+          )
+        }}
+      </Query>
+    )
+  } else if(codes.length === 1) {
+    return (
+      <Query query={fetchCountryWithList}
+        variables={{ codes }}
+        notifyOnNetworkStatusChange>
+        {({ loading, error, data, networkStatus }) => {
+          if (networkStatus === 4) return 'refetching'
+          if (loading) return null
+          if (error) return `error! ${error.message}`
+
+          const countries = data.countries.map(country => ({country:{name: country.name, code: country.code, stats: country.stats}}))
+          const stats = getStatsFromData(countries[0])
+          
+          return (
+            <div>
+              <SingleCountryGraph stats={stats}/>
             </div>
           )
         }}
       </Query>
     )
   }
+  return(
+    <div> 
+    </div>
+  )
 }
 
 export default Country
