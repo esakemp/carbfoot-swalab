@@ -19,27 +19,34 @@ const getStatsFromData = ({ country }) => ({
 function Country({ codes }) {
 
   console.log("country.js", codes)
-  return (
-    <Query query={fetchCountryWithList}
-      variables={{ codes }}
-      notifyOnNetworkStatusChange>
-      {({ loading, error, data, networkStatus }) => {
-        if (networkStatus === 4) return 'refetching'
-        if (loading) return null
-        if (error) return `error! ${error.message}`
-        const stats = getStatsFromData(data)
-        console.log(data)
-        return (
-          <div>
-            {data.country.name}
-            <SingleCountryGraph
-              stats={stats}
-            />
-          </div>
-        )
-      }}
-    </Query>
-  )
+
+  if (codes.length > 1) {
+    return (
+      <div>
+        W.I.P.
+      </div>
+    )
+  } else {
+    return (
+      <Query query={fetchCountryWithList}
+        variables={{ codes }}
+        notifyOnNetworkStatusChange>
+        {({ loading, error, data, networkStatus }) => {
+          if (networkStatus === 4) return 'refetching'
+          if (loading) return null
+          if (error) return `error! ${error.message}`
+          const countries = data.countries.map(country => country)
+          const stats = getStatsFromData(countries[0])
+          console.log(countries[0])
+          return (
+            <div>
+              {data.countries[0].name}
+            </div>
+          )
+        }}
+      </Query>
+    )
+  }
 }
 
 export default Country

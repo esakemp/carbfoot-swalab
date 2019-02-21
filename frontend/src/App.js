@@ -51,7 +51,7 @@ class App extends Component {
             <h2>Carbon emissions</h2>
             <Search onSelectCountry={this.onSelectCountry} />          
              {this.state.selectedCountry && (
-              <Country code={this.state.selectedCountry} />
+              <Country codes={this.state.selectedCountry} />
              )} 
           </div>
         </ApolloProvider>
