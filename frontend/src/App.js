@@ -37,6 +37,7 @@ class App extends Component {
 
   onSelectCountry = (value) => {
     this.setState({ selectedCountry: value })
+    console.log(value)
   }
 
   render() {
@@ -49,9 +50,9 @@ class App extends Component {
           <div>
             <h2>Carbon emissions</h2>
             <Search onSelectCountry={this.onSelectCountry} />          
-            {this.state.selectedCountry && (
+             {this.state.selectedCountry && (
               <Country code={this.state.selectedCountry} />
-            )}
+             )} 
           </div>
         </ApolloProvider>
       </div>

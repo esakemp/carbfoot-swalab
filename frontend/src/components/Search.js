@@ -12,7 +12,7 @@ import Chip from '@material-ui/core/Chip';
 var suggestions = []
 
 function renderInput(inputProps) {
-  const { InputProps, ref, ...other } = inputProps;
+  const { InputProps, ref, ...other } = inputProps
 
   return (
     <TextField
@@ -22,12 +22,12 @@ function renderInput(inputProps) {
       }}
       {...other}
     />
-  );
+  )
 }
 
 function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
-  const isHighlighted = highlightedIndex === index;
-  const isSelected = (selectedItem || '').indexOf(suggestion.name) > -1;
+  const isHighlighted = highlightedIndex === index
+  const isSelected = (selectedItem || '').indexOf(suggestion.name) > -1
 
   return (
     <MenuItem
@@ -41,71 +41,74 @@ function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, sele
     >
       {suggestion.name}
     </MenuItem>
-  );
+  )
 }
 
 
 function getSuggestions(value) {
   const inputValue = deburr(value.trim()).toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
+  const inputLength = inputValue.length
+  let count = 0
 
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
       const keep =
-        count < 5 && suggestion.name.slice(0, inputLength).toLowerCase() === inputValue;
+        count < 5 && suggestion.name.slice(0, inputLength).toLowerCase() === inputValue
 
       if (keep) {
-        count += 1;
+        count += 1
       }
 
-      return keep;
-    });
+      return keep
+    })
 }
 
 class DownshiftMultiple extends React.Component {
   state = {
     inputValue: '',
     selectedItem: [],
-  };
+  }
 
   handleKeyDown = event => {
-    const { inputValue, selectedItem } = this.state;
+    const { inputValue, selectedItem } = this.state
     if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
       this.setState({
         selectedItem: selectedItem.slice(0, selectedItem.length - 1),
-      });
+      })
     }
-  };
+  }
 
   handleInputChange = event => {
-    this.setState({ inputValue: event.target.value });
-  };
+    this.setState({ inputValue: event.target.value })
+  }
 
   handleChange = item => {
     let { selectedItem } = this.state;
 
     if (selectedItem.indexOf(item) === -1) {
-      selectedItem = [...selectedItem, item];
+      selectedItem = [...selectedItem, item]
     }
-    console.log(selectedItem)
+
     this.setState({
       inputValue: '',
       selectedItem,
-    });
-  };
+    })
+    console.log(selectedItem)
+    this.props.onSelectCountry(selectedItem.map(country => country.code))
+  }
 
   handleDelete = item => () => {
     this.setState(state => {
-      const selectedItem = [...state.selectedItem];
-      selectedItem.splice(selectedItem.indexOf(item), 1);
-      return { selectedItem };
+      const selectedItem = [...state.selectedItem]
+      selectedItem.splice(selectedItem.indexOf(item), 1)
+      this.props.onSelectCountry(selectedItem.map(country => country.code))
+      return { selectedItem }
     });
   };
 
   render() {
-    const { inputValue, selectedItem } = this.state;
+    const { inputValue, selectedItem } = this.state
 
     return (
       <Downshift
@@ -113,7 +116,7 @@ class DownshiftMultiple extends React.Component {
         inputValue={inputValue}
         onChange={this.handleChange}
         selectedItem={selectedItem}
-        itemToString={item => (item ? item.code : '')}
+        itemToString={item => (item ? item.name : '')}
       >
         {({
           getInputProps,
@@ -129,9 +132,9 @@ class DownshiftMultiple extends React.Component {
                 InputProps: getInputProps({
                   startAdornment: selectedItem.map(item => (
                     <Chip
-                      key={item}
+                      key={item.code}
                       tabIndex={-1}
-                      label={item}
+                      label={item.name}
                       onDelete={this.handleDelete(item)}
                     />
                   )),
@@ -147,7 +150,7 @@ class DownshiftMultiple extends React.Component {
                     renderSuggestion({
                       suggestion,
                       index,
-                      itemProps: getItemProps({ item: suggestion.code, index, key: suggestion.code }),
+                      itemProps: getItemProps({ item: suggestion, index, key: suggestion.code }),
                       highlightedIndex,
                       selectedItem: selectedItem2,
                     }),
@@ -161,49 +164,13 @@ class DownshiftMultiple extends React.Component {
   }
 }
 
-const BasicAutocomplete = ({ items, onChange }) => (
-  <Downshift onChange={onChange} itemToString={item => (item ? item.name : '')}>
-    {({
-      getInputProps,
-      getItemProps,
-      isOpen,
-      inputValue,
-      selectedItem,
-      highlightedIndex
-    }) => (
-        <div>
-          <input {...getInputProps({ placeholder: 'search' })} />
-          {isOpen ? (
-            <div style={{ border: '1px solid #ccc' }}>
-              {items.filter(i => !inputValue || i.name
-                .toLowerCase().includes(inputValue.toLowerCase()))
-                .slice(0, 10).map((item, index) => (
-                  <div {...getItemProps({ item, index, key: item.code })}
-                    key={item.code}
-                    style={{
-                      backgroundColor: highlightedIndex === index ? 'gray' : 'white',
-                      fontWeight: selectedItem === item.name ? 'bold' : 'normal'
-                    }}
-                  >
-                    {item.name}
-                  </div>
-                ))}
-            </div>
-          ) : null}
-        </div>
-      )}
-  </Downshift>
-)
-
 function Search({ onSelectCountry, data: { allCountries = [] } }) {
-  //<BasicAutocomplete items={allCountries}
-  //onChange={selectedItem => onSelectCountry(selectedItem.code)} />
+
   suggestions = allCountries
+
   return (
     <div>
-      <BasicAutocomplete items={allCountries}
-        onChange={selectedItem => onSelectCountry(selectedItem.code)} />
-      <DownshiftMultiple />
+      <DownshiftMultiple onSelectCountry={selectedItem => onSelectCountry(selectedItem)} />
     </div>
 
   )
