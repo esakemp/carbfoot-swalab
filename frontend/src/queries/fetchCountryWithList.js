@@ -1,15 +1,15 @@
-import gql from 'graphql-tag'
+import gql from "graphql-tag";
 
 export default gql`
-query findCountries($codes: [String!]){
-    countries(codes:$codes) {
+  query findCountries($codes: [String!]) {
+    countries(codes: $codes) {
       name
       code
-      stats{
-          year
-          population
-          emissions
+      stats {
+        year
+        population
+        emissions
       }
     }
   }
-`
+`;

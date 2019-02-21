@@ -1,12 +1,20 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import {
-  HighchartsChart, Chart, withHighcharts, XAxis, YAxis, LineSeries, Tooltip, Legend, Title
+  HighchartsChart,
+  Chart,
+  withHighcharts,
+  XAxis,
+  YAxis,
+  LineSeries,
+  Tooltip,
+  Legend,
+  Title
 } from 'react-jsx-highcharts'
 
 const MultiCountryGraph = ({ statsArray }) => (
   <div>
-    <HighchartsChart >
+    <HighchartsChart>
       <Chart marginBottom={100} />
       <Title>Emissions</Title>
       <Tooltip shared />
@@ -19,9 +27,9 @@ const MultiCountryGraph = ({ statsArray }) => (
           <LineSeries key={country} name={country} data={emissions} />
         ))}
       </YAxis>
-      <Legend verticalAlign='bottom' />
+      <Legend verticalAlign="bottom" />
     </HighchartsChart>
-    <HighchartsChart >
+    <HighchartsChart>
       <Chart marginBottom={100} />
       <Title>Population</Title>
       <Tooltip shared />
@@ -34,7 +42,7 @@ const MultiCountryGraph = ({ statsArray }) => (
           <LineSeries key={country} name={country} data={population} />
         ))}
       </YAxis>
-      <Legend verticalAlign='bottom' />
+      <Legend verticalAlign="bottom" />
     </HighchartsChart>
   </div>
 )

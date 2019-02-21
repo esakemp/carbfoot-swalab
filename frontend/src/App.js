@@ -18,24 +18,23 @@ const styles = theme => ({
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
       width: 400,
       marginLeft: 'auto',
-      marginRight: 'auto',
-    },
+      marginRight: 'auto'
+    }
   },
   paper: {
     marginTop: theme.spacing.unit * 8,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme
+      .spacing.unit * 3}px`
   }
 })
 
-
 class App extends Component {
-
   state = { selectedCountry: null }
 
-  onSelectCountry = (value) => {
+  onSelectCountry = value => {
     this.setState({ selectedCountry: value })
     console.log(value)
   }
@@ -45,14 +44,13 @@ class App extends Component {
 
     return (
       <div className={classes.main}>
-
         <ApolloProvider client={client}>
           <div>
             <h2>Carbon emissions</h2>
-            <Search onSelectCountry={this.onSelectCountry} />          
-             {this.state.selectedCountry && (
+            <Search onSelectCountry={this.onSelectCountry} />
+            {this.state.selectedCountry && (
               <Country codes={this.state.selectedCountry} />
-             )} 
+            )}
           </div>
         </ApolloProvider>
       </div>

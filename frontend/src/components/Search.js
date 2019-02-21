@@ -4,10 +4,10 @@ import Downshift from 'downshift'
 import { graphql } from 'react-apollo'
 import fetchAll from '../queries/fetchAll'
 
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import Chip from '@material-ui/core/Chip';
+import TextField from '@material-ui/core/TextField'
+import Paper from '@material-ui/core/Paper'
+import MenuItem from '@material-ui/core/MenuItem'
+import Chip from '@material-ui/core/Chip'
 
 var suggestions = []
 
@@ -18,14 +18,20 @@ function renderInput(inputProps) {
     <TextField
       InputProps={{
         inputRef: ref,
-        ...InputProps,
+        ...InputProps
       }}
       {...other}
     />
   )
 }
 
-function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, selectedItem }) {
+function renderSuggestion({
+  suggestion,
+  index,
+  itemProps,
+  highlightedIndex,
+  selectedItem
+}) {
   const isHighlighted = highlightedIndex === index
   const isSelected = (selectedItem || '').indexOf(suggestion.name) > -1
 
@@ -36,7 +42,7 @@ function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, sele
       selected={isHighlighted}
       component="div"
       style={{
-        fontWeight: isSelected ? 500 : 400,
+        fontWeight: isSelected ? 500 : 400
       }}
     >
       {suggestion.name}
@@ -44,37 +50,41 @@ function renderSuggestion({ suggestion, index, itemProps, highlightedIndex, sele
   )
 }
 
-
 function getSuggestions(value) {
-  const inputValue = deburr(value.trim()).toLowerCase();
+  const inputValue = deburr(value.trim()).toLowerCase()
   const inputLength = inputValue.length
   let count = 0
 
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
-      const keep =
-        count < 5 && suggestion.name.slice(0, inputLength).toLowerCase() === inputValue
+        const keep =
+          count < 5 &&
+          suggestion.name.slice(0, inputLength).toLowerCase() === inputValue
 
-      if (keep) {
-        count += 1
-      }
+        if (keep) {
+          count += 1
+        }
 
-      return keep
-    })
+        return keep
+      })
 }
 
-class DownshiftMultiple extends React.Component {
+class DownshiftMultiple extends Component {
   state = {
     inputValue: '',
-    selectedItem: [],
+    selectedItem: []
   }
 
   handleKeyDown = event => {
     const { inputValue, selectedItem } = this.state
-    if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {
+    if (
+      selectedItem.length &&
+      !inputValue.length &&
+      event.key === 'Backspace'
+    ) {
       this.setState({
-        selectedItem: selectedItem.slice(0, selectedItem.length - 1),
+        selectedItem: selectedItem.slice(0, selectedItem.length - 1)
       })
     }
   }
@@ -84,7 +94,7 @@ class DownshiftMultiple extends React.Component {
   }
 
   handleChange = item => {
-    let { selectedItem } = this.state;
+    let { selectedItem } = this.state
 
     if (selectedItem.indexOf(item) === -1) {
       selectedItem = [...selectedItem, item]
@@ -92,7 +102,7 @@ class DownshiftMultiple extends React.Component {
 
     this.setState({
       inputValue: '',
-      selectedItem,
+      selectedItem
     })
     console.log(selectedItem)
     this.props.onSelectCountry(selectedItem.map(country => country.code))
@@ -104,8 +114,8 @@ class DownshiftMultiple extends React.Component {
       selectedItem.splice(selectedItem.indexOf(item), 1)
       this.props.onSelectCountry(selectedItem.map(country => country.code))
       return { selectedItem }
-    });
-  };
+    })
+  }
 
   render() {
     const { inputValue, selectedItem } = this.state
@@ -124,55 +134,59 @@ class DownshiftMultiple extends React.Component {
           isOpen,
           inputValue: inputValue2,
           selectedItem: selectedItem2,
-          highlightedIndex,
+          highlightedIndex
         }) => (
-            <div>
-              {renderInput({
-                fullWidth: true,
-                InputProps: getInputProps({
-                  startAdornment: selectedItem.map(item => (
-                    <Chip
-                      key={item.code}
-                      tabIndex={-1}
-                      label={item.name}
-                      onDelete={this.handleDelete(item)}
-                    />
-                  )),
-                  onChange: this.handleInputChange,
-                  onKeyDown: this.handleKeyDown,
-                  placeholder: 'Select multiple countries',
-                }),
-                label: 'Label',
-              })}
-              {isOpen ? (
-                <Paper square>
-                  {getSuggestions(inputValue2).map((suggestion, index) =>
-                    renderSuggestion({
-                      suggestion,
+          <div>
+            {renderInput({
+              fullWidth: true,
+              InputProps: getInputProps({
+                startAdornment: selectedItem.map(item => (
+                  <Chip
+                    key={item.code}
+                    tabIndex={-1}
+                    label={item.name}
+                    onDelete={this.handleDelete(item)}
+                  />
+                )),
+                onChange: this.handleInputChange,
+                onKeyDown: this.handleKeyDown,
+                placeholder: 'Select multiple countries'
+              }),
+              label: 'Label'
+            })}
+            {isOpen ? (
+              <Paper square>
+                {getSuggestions(inputValue2).map((suggestion, index) =>
+                  renderSuggestion({
+                    suggestion,
+                    index,
+                    itemProps: getItemProps({
+                      item: suggestion,
                       index,
-                      itemProps: getItemProps({ item: suggestion, index, key: suggestion.code }),
-                      highlightedIndex,
-                      selectedItem: selectedItem2,
+                      key: suggestion.code
                     }),
-                  )}
-                </Paper>
-              ) : null}
-            </div>
-          )}
+                    highlightedIndex,
+                    selectedItem: selectedItem2
+                  })
+                )}
+              </Paper>
+            ) : null}
+          </div>
+        )}
       </Downshift>
-    );
+    )
   }
 }
 
 function Search({ onSelectCountry, data: { allCountries = [] } }) {
-
   suggestions = allCountries
 
   return (
     <div>
-      <DownshiftMultiple onSelectCountry={selectedItem => onSelectCountry(selectedItem)} />
+      <DownshiftMultiple
+        onSelectCountry={selectedItem => onSelectCountry(selectedItem)}
+      />
     </div>
-
   )
 }
 

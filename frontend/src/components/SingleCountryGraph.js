@@ -1,11 +1,19 @@
 import React from 'react'
 import Highcharts from 'highcharts'
 import {
-  HighchartsChart, Chart, withHighcharts, XAxis, YAxis, LineSeries, Tooltip, Legend, Title
+  HighchartsChart,
+  Chart,
+  withHighcharts,
+  XAxis,
+  YAxis,
+  LineSeries,
+  Tooltip,
+  Legend,
+  Title
 } from 'react-jsx-highcharts'
 
 const SingleCountryGraph = ({ stats }) => (
-  <HighchartsChart >
+  <HighchartsChart>
     <Chart marginBottom={100} />
     <Title>{stats.country}</Title>
     <Tooltip shared />
@@ -14,12 +22,12 @@ const SingleCountryGraph = ({ stats }) => (
     </XAxis>
     <YAxis>
       <YAxis.Title>Emissions</YAxis.Title>
-      <LineSeries name='Emissions' data={stats.emissions} />
+      <LineSeries name="Emissions" data={stats.emissions} />
     </YAxis>
     <YAxis opposite>
-      <LineSeries name='Population' data={stats.population} />
+      <LineSeries name="Population" data={stats.population} />
     </YAxis>
-    <Legend verticalAlign='bottom' />
+    <Legend verticalAlign="bottom" />
   </HighchartsChart>
 )
 
