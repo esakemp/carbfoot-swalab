@@ -4,7 +4,7 @@ import Downshift from 'downshift'
 import { graphql } from 'react-apollo'
 import fetchAll from '../queries/fetchAll'
 
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -15,32 +15,32 @@ var suggestions = []
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
+    height: 250
   },
   container: {
     flexGrow: 1,
-    position: 'relative',
+    position: 'relative'
   },
   paper: {
     position: 'absolute',
     zIndex: 1,
     marginTop: theme.spacing.unit,
     left: 0,
-    right: 0,
+    right: 0
   },
   chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`
   },
   inputRoot: {
-    flexWrap: 'wrap',
+    flexWrap: 'wrap'
   },
   inputInput: {
     width: 'auto',
-    flexGrow: 1,
+    flexGrow: 1
   },
   divider: {
-    height: theme.spacing.unit * 2,
-  },
+    height: theme.spacing.unit * 2
+  }
 })
 
 function renderInput(inputProps) {
@@ -191,7 +191,7 @@ class DownshiftMultiple extends Component {
                 onKeyDown: this.handleKeyDown,
                 placeholder: 'Select multiple countries'
               }),
-              label: 'Label'
+              label: 'Countries'
             })}
             {isOpen ? (
               <Paper className={classes.paper} square>
