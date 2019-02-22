@@ -15,14 +15,13 @@ import {
 const MultiCountryGraph = ({ statsArray }) => (
   <div>
     <HighchartsChart>
-      <Chart marginBottom={100} />
+      <Chart marginBottom={100} zoomType="x" />
       <Title>Emissions</Title>
       <Tooltip shared />
       <XAxis tickPixelInterval={10}>
         <XAxis.Title>Year</XAxis.Title>
       </XAxis>
-      <YAxis>
-        <YAxis.Title>Emissions</YAxis.Title>
+      <YAxis labels={{ align: 'left', x: 0 }}>
         {statsArray.map(({ country, emissions }) => (
           <LineSeries key={country} name={country} data={emissions} />
         ))}
@@ -30,14 +29,13 @@ const MultiCountryGraph = ({ statsArray }) => (
       <Legend verticalAlign="bottom" />
     </HighchartsChart>
     <HighchartsChart>
-      <Chart marginBottom={100} />
+      <Chart marginBottom={100} zoomType="x" />
       <Title>Population</Title>
       <Tooltip shared />
       <XAxis tickPixelInterval={10}>
         <XAxis.Title>Year</XAxis.Title>
       </XAxis>
-      <YAxis>
-        <YAxis.Title>Population</YAxis.Title>
+      <YAxis labels={{ align: 'left', x: 0 }}>
         {statsArray.map(({ country, population }) => (
           <LineSeries key={country} name={country} data={population} />
         ))}
