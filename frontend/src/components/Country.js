@@ -18,68 +18,45 @@ const getStatsFromData = ({ country }) => ({
 })
 
 function Country({ codes }) {
-  if (codes.length > 1) {
-    return (
-      <Query
-        query={fetchCountryWithList}
-        variables={{ codes }}
-        notifyOnNetworkStatusChange
-      >
-        {({ loading, error, data, networkStatus }) => {
-          if (networkStatus === 4) return 'refetching'
-          if (loading) return null
-          if (error) return `error! ${error.message}`
+  return (
+    <Query
+      query={fetchCountryWithList}
+      variables={{ codes }}
+      notifyOnNetworkStatusChange
+    >
+      {({ loading, error, data, networkStatus }) => {
+        if (networkStatus === 4) return 'refetching'
+        if (loading) return null
+        if (error) return `error! ${error.message}`
 
-          const countries = data.countries.map(country => ({
-            country: {
-              name: country.name,
-              code: country.code,
-              stats: country.stats
-            }
-          }))
-          const countryStats = countries.map(country =>
-            getStatsFromData(country)
-          )
+        const countries = data.countries.map(country => ({
+          country: {
+            name: country.name,
+            code: country.code,
+            stats: country.stats
+          }
+        }))
 
+        const countryStats = countries.map(country => getStatsFromData(country))
+
+        if (countries.length > 1) {
           return (
             <div>
               <MultiCountryGraph statsArray={countryStats} />
             </div>
           )
-        }}
-      </Query>
-    )
-  } else if (codes.length === 1) {
-    return (
-      <Query
-        query={fetchCountryWithList}
-        variables={{ codes }}
-        notifyOnNetworkStatusChange
-      >
-        {({ loading, error, data, networkStatus }) => {
-          if (networkStatus === 4) return 'refetching'
-          if (loading) return null
-          if (error) return `error! ${error.message}`
-
-          const countries = data.countries.map(country => ({
-            country: {
-              name: country.name,
-              code: country.code,
-              stats: country.stats
-            }
-          }))
-          const stats = getStatsFromData(countries[0])
-
+        } else if (countries.length === 1) {
           return (
             <div>
-              <SingleCountryGraph stats={stats} />
+              <SingleCountryGraph stats={countryStats[0]} />
             </div>
           )
-        }}
-      </Query>
-    )
-  }
-  return <div />
+        } else {
+          return <div />
+        }
+      }}
+    </Query>
+  )
 }
 
 export default Country
