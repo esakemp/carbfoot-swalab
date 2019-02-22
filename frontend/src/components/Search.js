@@ -140,7 +140,6 @@ class DownshiftMultiple extends Component {
       inputValue: '',
       selectedItem
     })
-    console.log(selectedItem)
     this.props.onSelectCountry(selectedItem.map(country => country.code))
   }
 

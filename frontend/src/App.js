@@ -38,7 +38,6 @@ class App extends Component {
 
   onSelectCountry = value => {
     this.setState({ selectedCountry: value })
-    console.log(value)
   }
 
   render() {
