@@ -4,6 +4,7 @@ import Downshift from 'downshift'
 import { graphql } from 'react-apollo'
 import fetchAll from '../queries/fetchAll'
 
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -11,13 +12,48 @@ import Chip from '@material-ui/core/Chip'
 
 var suggestions = []
 
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    height: 250,
+  },
+  container: {
+    flexGrow: 1,
+    position: 'relative',
+  },
+  paper: {
+    position: 'absolute',
+    zIndex: 1,
+    marginTop: theme.spacing.unit,
+    left: 0,
+    right: 0,
+  },
+  chip: {
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+  },
+  inputRoot: {
+    flexWrap: 'wrap',
+  },
+  inputInput: {
+    width: 'auto',
+    flexGrow: 1,
+  },
+  divider: {
+    height: theme.spacing.unit * 2,
+  },
+})
+
 function renderInput(inputProps) {
-  const { InputProps, ref, ...other } = inputProps
+  const { InputProps, ref, classes, ...other } = inputProps
 
   return (
     <TextField
       InputProps={{
         inputRef: ref,
+        classes: {
+          root: classes.inputRoot,
+          input: classes.inputInput
+        },
         ...InputProps
       }}
       {...other}
@@ -118,6 +154,7 @@ class DownshiftMultiple extends Component {
   }
 
   render() {
+    const { classes } = this.props
     const { inputValue, selectedItem } = this.state
 
     return (
@@ -136,13 +173,15 @@ class DownshiftMultiple extends Component {
           selectedItem: selectedItem2,
           highlightedIndex
         }) => (
-          <div>
+          <div className={classes.container}>
             {renderInput({
               fullWidth: true,
+              classes,
               InputProps: getInputProps({
                 startAdornment: selectedItem.map(item => (
                   <Chip
                     key={item.code}
+                    className={classes.chip}
                     tabIndex={-1}
                     label={item.name}
                     onDelete={this.handleDelete(item)}
@@ -155,7 +194,7 @@ class DownshiftMultiple extends Component {
               label: 'Label'
             })}
             {isOpen ? (
-              <Paper square>
+              <Paper className={classes.paper} square>
                 {getSuggestions(inputValue2).map((suggestion, index) =>
                   renderSuggestion({
                     suggestion,
@@ -178,16 +217,16 @@ class DownshiftMultiple extends Component {
   }
 }
 
-function Search({ onSelectCountry, data: { allCountries = [] } }) {
+function Search({ classes, onSelectCountry, data: { allCountries = [] } }) {
   suggestions = allCountries
-
   return (
     <div>
       <DownshiftMultiple
+        classes={classes}
         onSelectCountry={selectedItem => onSelectCountry(selectedItem)}
       />
     </div>
   )
 }
 
-export default graphql(fetchAll)(Search)
+export default graphql(fetchAll)(withStyles(styles)(Search))
