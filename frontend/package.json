@@ -23,7 +23,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "standardize": "standard --fix"
+    "standardize": "standard --fix",
+    "check": "prettier --check './src/**/*.js'",
+    "write": "prettier --write './src/**/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,7 +37,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "prettier": "1.16.4",
+    "prettier": "^1.16.4",
     "standard": "^12.0.1"
   }
 }
