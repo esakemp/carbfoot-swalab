@@ -15,7 +15,7 @@ var suggestions = []
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250
+    marginBottom: theme.spacing.unit
   },
   container: {
     flexGrow: 1,
@@ -156,63 +156,64 @@ class DownshiftMultiple extends Component {
   render() {
     const { classes } = this.props
     const { inputValue, selectedItem } = this.state
-
     return (
-      <Downshift
+      <div className={classes.root}>
+        <Downshift
         id="downshift-multiple"
         inputValue={inputValue}
         onChange={this.handleChange}
         selectedItem={selectedItem}
         itemToString={item => (item ? item.name : '')}
-      >
-        {({
-          getInputProps,
-          getItemProps,
-          isOpen,
-          inputValue: inputValue2,
-          selectedItem: selectedItem2,
-          highlightedIndex
-        }) => (
-          <div className={classes.container}>
-            {renderInput({
-              fullWidth: true,
-              classes,
-              InputProps: getInputProps({
-                startAdornment: selectedItem.map(item => (
-                  <Chip
-                    key={item.code}
-                    className={classes.chip}
-                    tabIndex={-1}
-                    label={item.name}
-                    onDelete={this.handleDelete(item)}
-                  />
-                )),
-                onChange: this.handleInputChange,
-                onKeyDown: this.handleKeyDown,
-                placeholder: 'Select multiple countries'
-              }),
-              label: 'Countries'
-            })}
-            {isOpen ? (
-              <Paper className={classes.paper} square>
-                {getSuggestions(inputValue2).map((suggestion, index) =>
-                  renderSuggestion({
-                    suggestion,
-                    index,
-                    itemProps: getItemProps({
-                      item: suggestion,
+        >
+          {({
+            getInputProps,
+            getItemProps,
+            isOpen,
+            inputValue: inputValue2,
+            selectedItem: selectedItem2,
+            highlightedIndex
+          }) => (
+            <div className={classes.container}>
+              {renderInput({
+                fullWidth: true,
+                classes,
+                InputProps: getInputProps({
+                  startAdornment: selectedItem.map(item => (
+                    <Chip
+                      key={item.code}
+                      className={classes.chip}
+                      tabIndex={-1}
+                      label={item.name}
+                      onDelete={this.handleDelete(item)}
+                    />
+                  )),
+                  onChange: this.handleInputChange,
+                  onKeyDown: this.handleKeyDown,
+                  placeholder: 'Select multiple countries'
+                }),
+                label: 'Countries'
+              })}
+              {isOpen ? (
+                <Paper className={classes.paper} square>
+                  {getSuggestions(inputValue2).map((suggestion, index) =>
+                    renderSuggestion({
+                      suggestion,
                       index,
-                      key: suggestion.code
-                    }),
-                    highlightedIndex,
-                    selectedItem: selectedItem2
-                  })
-                )}
-              </Paper>
-            ) : null}
+                      itemProps: getItemProps({
+                        item: suggestion,
+                        index,
+                        key: suggestion.code
+                      }),
+                      highlightedIndex,
+                      selectedItem: selectedItem2
+                    })
+                  )}
+                </Paper>
+              ) : null}
           </div>
         )}
       </Downshift>
+    </div>
     )
   }
 }
