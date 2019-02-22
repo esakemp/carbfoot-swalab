@@ -14,17 +14,16 @@ import {
 
 const SingleCountryGraph = ({ stats }) => (
   <HighchartsChart>
-    <Chart marginBottom={100} />
+    <Chart marginBottom={100} zoomType="x" />
     <Title>{stats.country}</Title>
     <Tooltip shared />
     <XAxis tickPixelInterval={10}>
       <XAxis.Title>Year</XAxis.Title>
     </XAxis>
-    <YAxis>
-      <YAxis.Title>Emissions</YAxis.Title>
+    <YAxis labels={{ align: 'left', x: 0, y: -5 }}>
       <LineSeries name="Emissions" data={stats.emissions} />
     </YAxis>
-    <YAxis opposite>
+    <YAxis opposite labels={{ align: 'right', x: 0, y: -5 }}>
       <LineSeries name="Population" data={stats.population} />
     </YAxis>
     <Legend verticalAlign="bottom" />
