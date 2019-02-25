@@ -37,11 +37,13 @@ const RootQuery = new GraphQLObjectType({
 
         if (!year) {
           const data = [
-            { year: '2014' },
-            { year: '2013' },
-            { year: '2012' },
-            { year: '2011' },
-            { year: '2010' },
+            [
+              { year: '2014' },
+              { year: '2013' },
+              { year: '2012' },
+              { year: '2011' },
+              { year: '2010' },
+            ],
           ]
           return data
         }
@@ -49,7 +51,7 @@ const RootQuery = new GraphQLObjectType({
         const emissions = await axios.get(
           `http://populationservice:8000/top-10-emissions/${args.year}`
         )
-        
+
         const perCapita = await axios.get(
           `http://populationservice:8000/top-10-emissions-per-capita/${
             args.year
