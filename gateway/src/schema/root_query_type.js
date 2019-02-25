@@ -22,18 +22,20 @@ const RootQuery = new GraphQLObjectType({
       type: new GraphQLList(CountryType),
       args: { codes: { type: new GraphQLList(GraphQLString) } },
       async resolve(parentValue, args) {
-        const promiseArray = args.codes.map(code =>
-          axios.get(`http://populationservice:8000/countrystats/${code}`)
-        )
-
-        try {
+        const { codes } = args
+        if (!codes) {
+          const { data } = await axios.get(
+            'http://populationservice:8000/countrystats/'
+          )
+          return data
+        } else {
+          const promiseArray = args.codes.map(code =>
+            axios.get(`http://populationservice:8000/countrystats/${code}`)
+          )
           const countries = (await Promise.all(promiseArray)).map(
             res => res.data
           )
-
           return countries
-        } catch (error) {
-          console.error(error)
         }
       },
     },
