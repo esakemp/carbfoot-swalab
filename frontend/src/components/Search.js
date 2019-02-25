@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import deburr from 'lodash/deburr'
 import Downshift from 'downshift'
-import { graphql } from 'react-apollo'
+import { graphql, Query } from 'react-apollo'
 import fetchAll from '../queries/fetchAll'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -218,6 +218,8 @@ class DownshiftMultiple extends Component {
 }
 
 function Search({ classes, onSelectCountry, data: { allCountries = [] } }) {
+  console.log(allCountries)
+
   suggestions = allCountries
   return (
     <div>
