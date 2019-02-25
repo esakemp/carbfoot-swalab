@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 
 export default qgl`
     {
-        availableYears{
+        top10{
             year
         }
     }

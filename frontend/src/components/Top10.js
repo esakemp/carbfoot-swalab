@@ -14,11 +14,7 @@ function Top10({ year }) {
         if (loading) return null
         if (error) return `error! ${error.message}`
 
-        const list = data.top10.map(country => (
-          <li key={country.name}>{country.name}</li>
-        ))
-
-        return <div>{list}</div>
+        return <div></div>
       }}
     </Query>
   )
