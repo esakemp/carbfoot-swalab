@@ -5,6 +5,7 @@ import { ApolloProvider } from 'react-apollo'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Search from './components/Search'
 import Country from './components/Country'
+import Top10 from './components/Top10'
 
 import logo from './logo.png'
 
@@ -52,6 +53,7 @@ class App extends Component {
           {this.state.selectedCountry && (
             <Country codes={this.state.selectedCountry} />
           )}
+          <Top10 year={'0'} />
         </ApolloProvider>
       </div>
     )

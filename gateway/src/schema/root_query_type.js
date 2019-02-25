@@ -2,22 +2,13 @@ const graphql = require('graphql')
 const axios = require('axios')
 
 const CountryType = require('./country_type')
+const AvailableYearType = require('./available_year_type')
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
-    country: {
-      type: CountryType,
-      args: { code: { type: GraphQLString } },
-      async resolve(parentValue, args) {
-        const { data } = await axios.get(
-          `http://populationservice:8000/countrystats/${args.code}`
-        )
-        return data
-      },
-    },
     allCountries: {
       type: new GraphQLList(CountryType),
       async resolve(parentValue, args) {
@@ -44,6 +35,29 @@ const RootQuery = new GraphQLObjectType({
         } catch (error) {
           console.error(error)
         }
+      },
+    },
+    top10: {
+      type: new GraphQLList(CountryType),
+      args: { year: { type: GraphQLString } },
+      async resolve(parentValue, args) {
+        const { data } = await axios.get(
+          `http://populationservice:8000/top-10-emissions/${args.year}`
+        )
+        return data
+      },
+    },
+    availableYears: {
+      type: new GraphQLList(AvailableYearType),
+      async resolve(parentValue, args) {
+        const data = [
+          { year: '2014' },
+          { year: '2013' },
+          { year: '2012' },
+          { year: '2011' },
+          { year: '2010' },
+        ]
+        return data
       },
     },
   },
