@@ -10,18 +10,17 @@ const {
   EMISSION_UPDATED,
   COUNTRYSTATS_UPDATED,
 } = require('./events')
-const { getPopulations, upsertPopulation } = require('./population')
-const { getEmissions, upsertEmission } = require('./emissions')
-const {
-  getAllCountryStatistics,
-  getCountryStatistic,
-} = require('./countrystats')
 const {
   updateCountryStatsFromEmission,
   updateCountryStatsFromPopulation,
   updateTopEmissionsFromCountryStats,
 } = require('./handlers')
 const topten = require('./top10')
+const {
+  upsertAllCountryStats,
+  findCountry,
+  findCountries
+} = require('./country')
 const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
 
@@ -35,41 +34,19 @@ app.use(morgan('combined'))
 app.use(bodyparser.json({ limit: '50mb', extended: true }))
 app.use(cors())
 
-app.get('/populations', async (req, res) => {
-  const populations = await getPopulations()
-  res.json(populations)
-})
-
-app.post('/populations', async (req, res) => {
-  const populations = req.body.filter(({ code }) => countries.isValid(code))
-  for (let population of populations) {
-    const updated = await upsertPopulation(population)
-    publisher.publish(POPULATION_UPDATED, updated)
-  }
-  res.status(201).send()
-})
-
-app.get('/emissions', async (req, res) => {
-  const emissions = await getEmissions()
-  res.json(emissions)
-})
-
-app.post('/emissions', async (req, res) => {
-  const emissions = req.body.filter(({ code }) => countries.isValid(code))
-  for (let emission of emissions) {
-    const updated = await upsertEmission(emission)
-    publisher.publish(EMISSION_UPDATED, updated)
-  }
-  res.status(201).send()
-})
-
 app.get('/countrystats', async (req, res) => {
-  const statistics = await getAllCountryStatistics()
+  const statistics = await findCountries()
   res.json(statistics)
 })
 
+app.post('/countrystats', async (req, res) => {
+  const stats = req.body.filter(({ code }) => countries.isValid(code))
+  await upsertAllCountryStats(stats)
+  res.status(201).send()
+})
+
 app.get('/countrystats/:id', async (req, res) => {
-  const statistic = await getCountryStatistic(req.params.id)
+  const statistic = await findCountry(req.params.id)
   res.json(statistic)
 })
 

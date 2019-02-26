@@ -11,7 +11,13 @@ const StatisticsSchema = new mongoose.Schema({
   }
 }, {
   toObject: { virtuals: true },
-  toJSON: { virtuals: true }
+  toJSON: {
+    virtuals: true,
+    transform: function(doc, ret, options) {
+      const { year, emissions = null, population = null, perCapita } = ret
+      return { year, emissions, population, perCapita }
+    }
+  }
 })
 
 StatisticsSchema.virtual('perCapita').get(function () {
@@ -23,7 +29,13 @@ const CountrySchema = new mongoose.Schema({
   name: String
 }, {
   toObject: { virtuals: true },
-  toJSON: { virtuals: true }
+  toJSON: {
+    virtuals: true,
+    transform: function(doc, ret, options) {
+      const { code, name } = ret
+      return { code, name }
+    }
+  }
 })
 
 CountrySchema.virtual('stats', {
@@ -50,9 +62,22 @@ const upsertCountryStats = async (code, name, stats) => {
   await Promise.all(promises)
 }
 
-const findCountry = async code =>  Country.findOne({ code }).populate('stats').exec()
+const findCountry = async code =>  Country
+  .findOne({ code })
+  .populate({
+    path: 'stats',
+    options: {
+      sort: { year : -1 }
+    }
+  }).exec()
 
 const findCountries = async () =>  Country.find().exec()
+
+const upsertAllCountryStats = async countries => {
+  for (let { code, name, stats } of countries) {
+    await upsertCountryStats(code, name, stats)
+  }
+}
 
 module.exports = {
   Country,
@@ -60,5 +85,6 @@ module.exports = {
   upsertCountry,
   upsertCountryStats,
   findCountry,
-  findCountries
+  findCountries,
+  upsertAllCountryStats
 }
