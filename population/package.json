@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testEnvironment": "node",
+    "watchPathIgnorePatterns": ["^((?!(test.js)).)*$"]
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test jest --maxWorkers=1",
     "standardize": "standard --fix"
   },
   "author": "",

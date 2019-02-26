@@ -1,10 +1,12 @@
 const mongoose = require('mongoose')
 const { MONGOURL } = require('./conf')
 
+mongoose.set('useFindAndModify', false)
+
 const dbconnect = () =>
   new Promise(async (resolve, reject) => {
     try {
-      await mongoose.connect(MONGOURL)
+      await mongoose.connect(MONGOURL, { useNewUrlParser: true })
       console.log('Connected to Mongo')
       resolve()
     } catch (error) {
@@ -13,7 +15,12 @@ const dbconnect = () =>
     }
   })
 
+const dbclose = () => {
+  mongoose.connection.close()
+}
+
 module.exports = {
   dbconnect,
   mongoose,
+  dbclose
 }
