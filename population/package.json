@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "NODE_ENV=test jest --maxWorkers=1",
+    "test": "NODE_ENV=test jest --runInBand",
     "standardize": "standard --fix"
   },
   "author": "",
