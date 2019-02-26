@@ -49,8 +49,8 @@ services:
     volumes:
       - ./updater:/usr/src/app
     environment:
-      - POPULATION_POST_URL=http://populationservice:8000/populations
-      - EMISSION_POST_URL=http://populationservice:8000/emissions
+      - POPULATION_POST_URL=http://populationservice:8000/countrystats
+      - EMISSION_POST_URL=http://populationservice:8000/countrystats
       - POP_API_URL=http://mock-wb-api:8000/v2/en/indicator/SP.POP.TOTL
       - CO_API_URL=http://mock-wb-api:8000/v2/en/indicator/EN.ATM.CO2E.KT
     restart: unless-stopped

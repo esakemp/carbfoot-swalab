@@ -8,7 +8,7 @@ const {
   CO_CSV_PREFIX,
 } = require('./conf')
 
-const recordsFromCsvStream = stream =>
+const recordsFromCsvStream = (stream, fieldname) =>
   new Promise(resolve => {
     const records = []
     stream
@@ -17,7 +17,7 @@ const recordsFromCsvStream = stream =>
         const { 'Country Name': name, 'Country Code': code, ...rest } = data
         const stats = Object.entries(rest)
           .filter(([key]) => !isNaN(key))
-          .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {})
+          .reduce((acc, [year, value]) => acc.concat({ year, [fieldname]: value }), [])
         records.push({ code, name, stats })
       })
       .on('end', () => resolve(records))
@@ -26,7 +26,7 @@ const recordsFromCsvStream = stream =>
 const updatePopulations = async () => {
   try {
     const stream = await fetchDataStream(POP_API_URL, POP_CSV_PREFIX)
-    const records = await recordsFromCsvStream(stream)
+    const records = await recordsFromCsvStream(stream, 'population')
     await publishPopulations(records)
   } catch (e) {
     console.error('Updating populations failed', e)
@@ -36,7 +36,7 @@ const updatePopulations = async () => {
 const updateCo2 = async () => {
   try {
     const stream = await fetchDataStream(CO_API_URL, CO_CSV_PREFIX)
-    const records = await recordsFromCsvStream(stream)
+    const records = await recordsFromCsvStream(stream, 'emissions')
     await publishEmissions(records)
   } catch (e) {
     console.error('Updating emissions failed', e)
