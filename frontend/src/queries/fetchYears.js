@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export default qgl`
+export default gql`
     {
         top10{
             year

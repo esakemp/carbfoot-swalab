@@ -2,6 +2,7 @@ const graphql = require('graphql')
 const axios = require('axios')
 
 const CountryType = require('./country_type')
+const Top10Type = require('./top10_type')
 
 const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql
 
@@ -30,21 +31,14 @@ const RootQuery = new GraphQLObjectType({
       },
     },
     top10: {
-      type: new GraphQLList(new GraphQLList(CountryType)),
+      type: Top10Type,
       args: { year: { type: GraphQLString } },
       async resolve(parentValue, args) {
         const { year } = args
 
         if (!year) {
-          const data = [
-            [
-              { year: '2014' },
-              { year: '2013' },
-              { year: '2012' },
-              { year: '2011' },
-              { year: '2010' },
-            ],
-          ]
+          const data = { year: ['2014', '2013', '2012', '2011', '2010'] }
+
           return data
         }
 
@@ -58,7 +52,7 @@ const RootQuery = new GraphQLObjectType({
           }`
         )
 
-        var data = [emissions.data, perCapita.data]
+        const data = { emissions: emissions.data, perCapita: perCapita.data }
 
         return data
       },
