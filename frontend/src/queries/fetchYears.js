@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
-export default qgl`
+export default gql`
     {
-        availableYears{
+        top10{
             year
         }
     }

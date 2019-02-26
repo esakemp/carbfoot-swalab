@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Search from './components/Search'
 import Country from './components/Country'
 import Top10 from './components/Top10'
+import YearDropdown from './components/YearDropdown'
 
 import logo from './logo.png'
 
@@ -35,10 +36,14 @@ const styles = theme => ({
 })
 
 class App extends Component {
-  state = { selectedCountry: null }
+  state = { selectedCountry: [], selectedYear: null }
 
   onSelectCountry = value => {
     this.setState({ selectedCountry: value })
+    this.setState({ selectedYear: null })
+  }
+  onSelectYear = value => {
+    this.setState({ selectedYear: value })
   }
 
   render() {
@@ -53,7 +58,14 @@ class App extends Component {
           {this.state.selectedCountry && (
             <Country codes={this.state.selectedCountry} />
           )}
-          <Top10 year={'0'} />
+          {this.state.selectedCountry.length < 1 && (
+            <div>
+              <YearDropdown onSelectYear={this.onSelectYear} />
+              {this.state.selectedYear && (
+                <Top10 year={this.state.selectedYear} />
+              )}
+            </div>
+          )}
         </ApolloProvider>
       </div>
     )

@@ -1,13 +1,24 @@
 import gql from 'graphql-tag'
 
 export default gql`
-  query top10($year: String!) {
+  query fetchTop10($year: String!) {
     top10(year: $year) {
-      name
-      year
-      population
-      emissions
-      normalized
+      emissions {
+        code
+        name
+        year
+        population
+        emissions
+        normalized
+      }
+      perCapita {
+        code
+        name
+        year
+        population
+        emissions
+        normalized
+      }
     }
   }
 `
