@@ -1,21 +1,8 @@
 const express = require('express')
 const morgan = require('morgan')
 const bodyparser = require('body-parser')
-const publisher = require('./publisher')
 const cors = require('cors')
 const countries = require('i18n-iso-countries')
-
-const {
-  POPULATION_UPDATED,
-  EMISSION_UPDATED,
-  COUNTRYSTATS_UPDATED,
-} = require('./events')
-const {
-  updateCountryStatsFromEmission,
-  updateCountryStatsFromPopulation,
-  updateTopEmissionsFromCountryStats,
-} = require('./handlers')
-const topten = require('./top10')
 const {
   upsertAllCountryStats,
   findCountry,
@@ -25,10 +12,6 @@ const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
 
 const app = express()
-
-publisher.subscribe(EMISSION_UPDATED, updateCountryStatsFromEmission)
-publisher.subscribe(POPULATION_UPDATED, updateCountryStatsFromPopulation)
-publisher.subscribe(COUNTRYSTATS_UPDATED, updateTopEmissionsFromCountryStats)
 
 app.use(morgan('combined'))
 app.use(bodyparser.json({ limit: '50mb', extended: true }))
@@ -51,15 +34,11 @@ app.get('/countrystats/:id', async (req, res) => {
 })
 
 app.get('/top-10-emissions/:year', async (req, res) => {
-  const { year } = req.params
-  const results = await topten.getTopTenEmissions(year)
-  res.json(results)
+  res.json([])
 })
 
 app.get('/top-10-emissions-per-capita/:year', async (req, res) => {
-  const { year } = req.params
-  const results = await topten.getTopTenEmissionsPerCapita(year)
-  res.json(results)
+  res.json([])
 })
 
 app.get('*', async (req, res) => {
