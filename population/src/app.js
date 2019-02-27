@@ -8,8 +8,13 @@ const {
   findCountry,
   findCountries
 } = require('./country')
+const { ALL_COUNTRYSTATS_UPDATED } = require('./events')
+const publisher = require('./publisher')
 const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
+const { updateTop10Stats } = require('./handlers')
+
+publisher.subscribe(ALL_COUNTRYSTATS_UPDATED, updateTop10Stats)
 
 const app = express()
 
@@ -25,6 +30,7 @@ app.get('/countrystats', async (req, res) => {
 app.post('/countrystats', async (req, res) => {
   const stats = req.body.filter(({ code }) => countries.isValid(code))
   await upsertAllCountryStats(stats)
+  publisher.publish(ALL_COUNTRYSTATS_UPDATED)
   res.status(201).send()
 })
 

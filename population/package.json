@@ -5,7 +5,9 @@
   "main": "index.js",
   "jest": {
     "testEnvironment": "node",
-    "watchPathIgnorePatterns": ["^((?!(test.js)).)*$"]
+    "watchPathIgnorePatterns": [
+      "^((?!(test.js)).)*$"
+    ]
   },
   "scripts": {
     "start": "node index.js",
@@ -18,6 +20,7 @@
   "dependencies": {
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
+    "collections": "^5.1.8",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "i18n-iso-countries": "^3.7.8",

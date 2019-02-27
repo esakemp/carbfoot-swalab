@@ -1,13 +1,5 @@
-const publisher = require('./publisher')
-
-const {
-  COUNTRYSTATS_UPDATED,
-  TOP_EMISSIONS_UPDATED,
-  TOP_PER_CAPITA_UPDATED,
-} = require('./events')
+const updateTop10Stats = async () => {}
 
 module.exports = {
-  updateCountryStatsFromEmission,
-  updateCountryStatsFromPopulation,
-  updateTopEmissionsFromCountryStats,
+  updateTop10Stats
 }
