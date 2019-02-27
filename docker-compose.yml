@@ -64,7 +64,3 @@ services:
       - ./mock-wb-api:/usr/src/app
     restart: unless-stopped
     container_name: mock-wb-api
-  redis:
-    image: redis
-    expose:
-      - "6379"
