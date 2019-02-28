@@ -15,14 +15,16 @@ const upsertCountryStats = async (code, name, stats) => {
   await Promise.all(promises)
 }
 
-const findCountry = async code => Country
-  .findOne({ code })
-  .populate({
-    path: 'stats',
-    options: {
-      sort: { year : -1 }
-    }
-  }).exec()
+const findCountry = async code => {
+  const country = await Country.findOne({ code })
+    .populate({
+      path: 'stats',
+      options: {
+        sort: { year : -1 }
+      }
+    }).exec()
+  return country
+}
 
 const findCountries = async () => Country.find().exec()
 
@@ -91,11 +93,7 @@ const updateTop10Stats = async () => {
 
 const getTop10All = async () => Top10.find({}).select({
   'year': 1,
-  '_id': 0,
-  'emissions.code': 1,
-  'emissions.name': 1,
-  'perCapita.code': 1,
-  'perCapita.name': 1
+  '_id': 0
 }).exec()
 
 module.exports = {

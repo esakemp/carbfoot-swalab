@@ -130,8 +130,5 @@ test('getTop10All() returns array with correct fields', async () => {
   expect(topstats).toBeTruthy()
   expect(topstats.length).toBe(1)
   const topstat = topstats[0]
-  expect(topstat).toHaveProperty('year', 'emissions', 'perCapita')
-  const { emissions, perCapita } = topstat
-  expect(emissions[0]).toMatchObject({ code, name })
-  expect(perCapita[0]).toMatchObject({ code, name })
+  expect(topstat).toHaveProperty('year')
 })

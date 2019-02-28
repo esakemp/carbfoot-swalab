@@ -34,8 +34,8 @@ const CountrySchema = new mongoose.Schema({
     toJSON: {
       virtuals: true,
       transform: function(doc, ret, options) {
-        const { code, name } = ret
-        return { code, name }
+        const { code, name, stats } = ret
+        return { code, name, stats }
       }
     }
   }
