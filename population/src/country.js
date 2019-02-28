@@ -1,4 +1,4 @@
-const { Country, Statistics } = require('./models')
+const { Country, Statistics, Top10 } = require('./models')
 
 const upsertCountry = async (code, name) => {
   return Country.findOneAndUpdate({ code }, { code, name }, { upsert: true, new: true })
@@ -15,7 +15,7 @@ const upsertCountryStats = async (code, name, stats) => {
   await Promise.all(promises)
 }
 
-const findCountry = async code =>  Country
+const findCountry = async code => Country
   .findOne({ code })
   .populate({
     path: 'stats',
@@ -24,7 +24,7 @@ const findCountry = async code =>  Country
     }
   }).exec()
 
-const findCountries = async () =>  Country.find().exec()
+const findCountries = async () => Country.find().exec()
 
 const upsertAllCountryStats = async countries => {
   for (let { code, name, stats } of countries) {
@@ -32,10 +32,68 @@ const upsertAllCountryStats = async countries => {
   }
 }
 
+const findAllYears = async () => Statistics.find().distinct('year').exec()
+
+const addToTopTen = (top10 = [], id, value) => {
+  if (top10.length === 0) {
+    return [{ id, value }]
+  } else {
+    const split = top10.findIndex(elem => elem.value < value)
+    return [ ...top10.slice(0, split), { id, value }, ...top10.slice(split, 9)]
+  }
+}
+
+const getFormattedStats = async ids => {
+  const stats = await Statistics.find({ _id: { $in: ids } }).populate('country').exec()
+  return stats.map(({ emissions, population, perCapita, country }) => {
+    const { code, name } = country
+    return { emissions, perCapita, population, code, name }
+  })
+}
+
+const top10Emissions = async statistics => {
+  const ids = statistics
+    .filter(({ emissions }) => !!emissions)
+    .reduce((acc, { _id, emissions }) => addToTopTen(acc, _id, emissions), [])
+    .map(({ id }) => id)
+  const formatted = await getFormattedStats(ids)
+  return formatted
+}
+
+const top10PerCapita = async statistics => {
+  const ids = statistics
+    .filter(({ perCapita }) => !!perCapita)
+    .reduce((acc, { _id, perCapita }) => addToTopTen(acc, _id, perCapita), [])
+    .map(({ id }) => id)
+  const formatted = await getFormattedStats(ids)
+  return formatted
+}
+
+const upsertTop10 = async (year, emissions, perCapita) => {
+  await Top10.findOneAndUpdate({ year }, { year, emissions, perCapita }, { upsert: true })
+}
+
+const getTop10 = async year => Top10.findOne({ year }).exec()
+
+const updateTop10StatsForYear = async year => {
+  const stats = await Statistics.find({ year }).exec()
+  const promises = [top10Emissions(stats), top10PerCapita(stats)]
+  const [ emissions, perCapita ] = await Promise.all(promises)
+  await upsertTop10(year, emissions, perCapita)
+}
+
+const updateTop10Stats = async () => {
+  const years = await findAllYears()
+  await Promise.all(years.map(year => updateTop10StatsForYear(year)))
+}
+
 module.exports = {
   upsertCountry,
   upsertCountryStats,
   findCountry,
   findCountries,
-  upsertAllCountryStats
+  upsertAllCountryStats,
+  findAllYears,
+  updateTop10Stats,
+  getTop10
 }

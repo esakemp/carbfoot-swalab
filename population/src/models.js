@@ -22,7 +22,8 @@ const StatisticsSchema = new mongoose.Schema({
 )
 
 StatisticsSchema.virtual('perCapita').get(function() {
-  return this.emissions / this.population
+  const perCapita = this.emissions / this.population
+  return Number.isNaN(perCapita) ? null : perCapita
 })
 
 const CountrySchema = new mongoose.Schema({
@@ -46,7 +47,26 @@ CountrySchema.virtual('stats', {
   foreignField: 'country'
 })
 
+const Top10Schema = new mongoose.Schema({
+  year: String,
+  perCapita: [{
+    emissions: Number,
+    perCapita: Number,
+    population: Number,
+    code: String,
+    name: String
+  }],
+  emissions: [{
+    emissions: Number,
+    perCapita: Number,
+    population: Number,
+    code: String,
+    name: String
+  }]
+})
+
 const Statistics = mongoose.model('Statistics', StatisticsSchema, 'Statistics')
 const Country = mongoose.model('Country', CountrySchema, 'Country')
+const Top10 = mongoose.model('Top10', Top10Schema, 'Top10')
 
-module.exports = { Statistics, Country }
+module.exports = { Statistics, Country, Top10 }

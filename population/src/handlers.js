@@ -1,5 +1,9 @@
-const updateTop10Stats = async () => {}
+const { updateTop10Stats } = require('./country')
+
+const materializeTop10Stats = async () => {
+  await updateTop10Stats()
+}
 
 module.exports = {
-  updateTop10Stats
+  materializeTop10Stats
 }

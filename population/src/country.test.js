@@ -1,4 +1,13 @@
-const { Country, Statistics, upsertCountry, upsertCountryStats, findCountry } = require('./country')
+const { Country, Statistics } = require('./models')
+const {
+  upsertCountry,
+  upsertCountryStats,
+  findCountry,
+  findAllYears,
+  updateTop10Stats,
+  getTop10
+} = require('./country')
+
 const { dbconnect, dbclose } = require('./db')
 
 beforeAll(async () => {
@@ -62,4 +71,35 @@ test('Calling upsertCountryStats with missing fields does not overwrite previous
   const saved = stats.find(s => s.year === year)
   expect(saved.population).toBe(population)
   expect(saved.emissions).toBe(emissions)
+})
+
+test('Calling findAllYears will return all saved years', async () => {
+  const stats = [
+    { year: 2000, emissions: 100.99, population: 10 },
+    { year: 2001, emissions: 200.99, population: 10 },
+    { year: 2002, emissions: 300.99, population: 10 }
+  ]
+  await upsertCountryStats('ZWE', 'Zimbabwe', stats)
+  await upsertCountryStats('FIN', 'Finland', stats)
+  const years = await findAllYears()
+  expect(years).toEqual(expect.arrayContaining(['2000', '2001', '2002']))
+})
+
+test('Calling updateTop10Stats() + getTop10() updates and fetches values correctly.', async () => {
+  const code = 'ZWE'
+  const name = 'Zimbabwe'
+  const stats = [
+    { year: '2014', emissions: '12020.426', population: '100' },
+  ]
+  await upsertCountryStats(code, name, stats)
+  await updateTop10Stats()
+  const topstats = await getTop10('2014')
+  expect(topstats.year).toBe('2014')
+  expect(topstats).toHaveProperty('year', 'emissions', 'perCapita')
+  const { emissions } = topstats
+  expect(emissions).toBeTruthy()
+  expect(emissions.length).toBe(1)
+  const topEmission = emissions[0]
+  expect(topEmission).toMatchObject({ code, name })
+  expect(topEmission).toHaveProperty('emissions', 'perCapita', 'population')
 })

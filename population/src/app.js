@@ -6,15 +6,16 @@ const countries = require('i18n-iso-countries')
 const {
   upsertAllCountryStats,
   findCountry,
-  findCountries
+  findCountries,
+  getTop10
 } = require('./country')
 const { ALL_COUNTRYSTATS_UPDATED } = require('./events')
 const publisher = require('./publisher')
 const { dbconnect } = require('./db')
 const { PORT } = require('./conf')
-const { updateTop10Stats } = require('./handlers')
+const { materializeTop10Stats } = require('./handlers')
 
-publisher.subscribe(ALL_COUNTRYSTATS_UPDATED, updateTop10Stats)
+publisher.subscribe(ALL_COUNTRYSTATS_UPDATED, materializeTop10Stats)
 
 const app = express()
 
@@ -40,11 +41,8 @@ app.get('/countrystats/:id', async (req, res) => {
 })
 
 app.get('/top-10-emissions/:year', async (req, res) => {
-  res.json([])
-})
-
-app.get('/top-10-emissions-per-capita/:year', async (req, res) => {
-  res.json([])
+  const top10 = await getTop10(req.params.year)
+  res.json(top10)
 })
 
 app.get('*', async (req, res) => {
