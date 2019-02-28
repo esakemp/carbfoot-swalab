@@ -7,7 +7,8 @@ const {
   upsertAllCountryStats,
   findCountry,
   findCountries,
-  getTop10
+  getTop10,
+  getTop10All
 } = require('./country')
 const { ALL_COUNTRYSTATS_UPDATED } = require('./events')
 const publisher = require('./publisher')
@@ -38,6 +39,11 @@ app.post('/countrystats', async (req, res) => {
 app.get('/countrystats/:id', async (req, res) => {
   const statistic = await findCountry(req.params.id)
   res.json(statistic)
+})
+
+app.get('/top-10-emissions', async (req, res) => {
+  const stats = await getTop10All()
+  res.json(stats)
 })
 
 app.get('/top-10-emissions/:year', async (req, res) => {
