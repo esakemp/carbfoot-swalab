@@ -1,4 +1,4 @@
-const { Country, Statistics } = require('./models')
+const { Country, Statistics, Top10 } = require('./models')
 const {
   upsertCountry,
   upsertCountryStats,
@@ -17,6 +17,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await Statistics.deleteMany()
   await Country.deleteMany()
+  await Top10.deleteMany()
 })
 
 afterAll(() => {
@@ -102,4 +103,16 @@ test('Calling updateTop10Stats() + getTop10() updates and fetches values correct
   const topEmission = emissions[0]
   expect(topEmission).toMatchObject({ code, name })
   expect(topEmission).toHaveProperty('emissions', 'perCapita', 'population')
+})
+
+test.only('getTop10() returns empty for year where emissions are null', async () => {
+  const code = 'ZWE'
+  const name = 'Zimbabwe'
+  const stats = [
+    { year: '2014', emissions: '', population: '100' }
+  ]
+  await upsertCountryStats(code, name, stats)
+  await updateTop10Stats()
+  const topstats = await getTop10('2014')
+  expect(topstats).toBeFalsy()
 })

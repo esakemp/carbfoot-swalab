@@ -69,8 +69,10 @@ const top10PerCapita = async statistics => {
   return formatted
 }
 
-const upsertTop10 = async (year, emissions, perCapita) => {
-  await Top10.findOneAndUpdate({ year }, { year, emissions, perCapita }, { upsert: true })
+const upsertTop10 = async (year, emissions=[], perCapita=[]) => {
+  if (emissions.length > 0) {
+    await Top10.findOneAndUpdate({ year }, { year, emissions, perCapita }, { upsert: true })
+  }
 }
 
 const getTop10 = async year => Top10.findOne({ year }).exec()
