@@ -5,7 +5,8 @@ const {
   findCountry,
   findAllYears,
   updateTop10Stats,
-  getTop10
+  getTop10,
+  getTop10All
 } = require('./country')
 
 const { dbconnect, dbclose } = require('./db')
@@ -105,7 +106,7 @@ test('Calling updateTop10Stats() + getTop10() updates and fetches values correct
   expect(topEmission).toHaveProperty('emissions', 'perCapita', 'population')
 })
 
-test.only('getTop10() returns empty for year where emissions are null', async () => {
+test('getTop10() returns empty for year where emissions are null', async () => {
   const code = 'ZWE'
   const name = 'Zimbabwe'
   const stats = [
@@ -115,4 +116,22 @@ test.only('getTop10() returns empty for year where emissions are null', async ()
   await updateTop10Stats()
   const topstats = await getTop10('2014')
   expect(topstats).toBeFalsy()
+})
+
+test('getTop10All() returns array with correct fields', async () => {
+  const code = 'ZWE'
+  const name = 'Zimbabwe'
+  const stats = [
+    { year: '2014', emissions: '100.123', population: '100' }
+  ]
+  await upsertCountryStats(code, name, stats)
+  await updateTop10Stats()
+  const topstats = await getTop10All()
+  expect(topstats).toBeTruthy()
+  expect(topstats.length).toBe(1)
+  const topstat = topstats[0]
+  expect(topstat).toHaveProperty('year', 'emissions', 'perCapita')
+  const { emissions, perCapita } = topstat
+  expect(emissions[0]).toMatchObject({ code, name })
+  expect(perCapita[0]).toMatchObject({ code, name })
 })

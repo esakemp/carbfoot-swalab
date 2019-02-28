@@ -89,6 +89,15 @@ const updateTop10Stats = async () => {
   await Promise.all(years.map(year => updateTop10StatsForYear(year)))
 }
 
+const getTop10All = async () => Top10.find({}).select({
+  'year': 1,
+  '_id': 0,
+  'emissions.code': 1,
+  'emissions.name': 1,
+  'perCapita.code': 1,
+  'perCapita.name': 1
+}).exec()
+
 module.exports = {
   upsertCountry,
   upsertCountryStats,
@@ -97,5 +106,6 @@ module.exports = {
   upsertAllCountryStats,
   findAllYears,
   updateTop10Stats,
-  getTop10
+  getTop10,
+  getTop10All
 }
