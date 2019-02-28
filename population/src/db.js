@@ -1,13 +1,16 @@
 const mongoose = require('mongoose')
-const { MONGOURL } = require('./conf')
+const { MONGOURL, MONGODBNAME } = require('./conf')
 
 mongoose.set('useFindAndModify', false)
+
+const defaults = { useNewUrlParser: true }
+const options = !MONGODBNAME ? defaults: { ...defaults, dbName: MONGODBNAME }
 
 const dbconnect = () =>
   new Promise(async (resolve, reject) => {
     try {
-      await mongoose.connect(MONGOURL, { useNewUrlParser: true })
-      console.log('Connected to Mongo')
+      await mongoose.connect(MONGOURL, options)
+      console.log('Connected to Mongo:', options)
       resolve()
     } catch (error) {
       console.error('Error connecting to Mongo', error)
