@@ -4,6 +4,8 @@ const axios = require('axios')
 const CountryType = require('./country_type')
 const Top10Type = require('./top10_type')
 
+const ROOTURL = 'http://populationservice:8000'
+
 const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql
 
 const RootQuery = new GraphQLObjectType({
@@ -35,26 +37,17 @@ const RootQuery = new GraphQLObjectType({
       args: { year: { type: GraphQLString } },
       async resolve(parentValue, args) {
         const { year } = args
-
         if (!year) {
-          const data = { year: ['2014', '2013', '2012', '2011', '2010'] }
-
-          return data
+          const { data: allTop10 } = await axios.get(
+            `${ROOTURL}/top-10-emissions`
+          )
+          const years = allTop10.map(stat => stat.year).sort().reverse()
+          return { year: years }
         }
-
-        const emissions = await axios.get(
+        const { data: top10Year } = await axios.get(
           `http://populationservice:8000/top-10-emissions/${args.year}`
         )
-
-        const perCapita = await axios.get(
-          `http://populationservice:8000/top-10-emissions-per-capita/${
-            args.year
-          }`
-        )
-
-        const data = { emissions: emissions.data, perCapita: perCapita.data }
-
-        return data
+        return top10Year
       },
     },
   },
