@@ -43,7 +43,7 @@ class Dropdown extends Component {
       <div className={classes.root}>
         <form className={classes.root} autoComplete="off">
           <FormControl className={classes.formControl} fullWidth={true}>
-            <InputLabel htmlFor="selectedYear">Year</InputLabel>
+            <InputLabel htmlFor="selectedYear">Top Emissions For Year</InputLabel>
             <Select
               value={this.state.selectedYear}
               onChange={this.handleChange}

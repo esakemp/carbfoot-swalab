@@ -4,7 +4,7 @@ import top10 from '../queries/fetchTop10'
 import Top10Graph from './Top10Graph'
 
 const formatDataToSeries = emissions => {
-  return emissions.map(({ name, emissions: y }) => ({ name, y }))
+  return emissions.map(({ name, emissions: y }) => ({ name, y })).sort((e1, e2) => e1.y - e2.y)
 }
 
 function Top10({ year }) {
@@ -16,7 +16,6 @@ function Top10({ year }) {
         if (error) return `error! ${error.message}`
         const { emissions } = data.top10
         const series = formatDataToSeries(emissions)
-        console.log(data)
         return (
           <React.Fragment>
             <Top10Graph series={series} year={year} />
