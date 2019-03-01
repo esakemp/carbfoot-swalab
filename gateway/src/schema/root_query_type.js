@@ -37,19 +37,23 @@ const RootQuery = new GraphQLObjectType({
       args: { year: { type: GraphQLString } },
       async resolve(parentValue, args) {
         const { year } = args
-        if (!year) {
-          const { data: allTop10 } = await axios.get(
-            `${ROOTURL}/top-10-emissions`
-          )
-          const years = allTop10.map(stat => stat.year).sort().reverse()
-          return { year: years }
-        }
         const { data: top10Year } = await axios.get(
-          `http://populationservice:8000/top-10-emissions/${args.year}`
+          `http://populationservice:8000/top-10-emissions/${year}`
         )
         return top10Year
       },
     },
+    top10List: {
+      type: new GraphQLList(Top10Type),
+      async resolve(parentValue, args) {
+        const { data: allTop10 } = await axios.get(
+          `${ROOTURL}/top-10-emissions`
+        )
+        console.log(allTop10)
+        const years = allTop10.sort((e1, e2) => e2.year - e1.year)
+        return years
+      }
+    }
   },
 })
 

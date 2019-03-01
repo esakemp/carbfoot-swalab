@@ -6,7 +6,7 @@ const { GraphQLObjectType, GraphQLString, GraphQLList } = graphql
 const Top10Type = new GraphQLObjectType({
   name: 'Top10',
   fields: {
-    year: {type: new GraphQLList(GraphQLString)},
+    year: {type: GraphQLString},
     emissions: {type: new GraphQLList(CountryType)},
     perCapita: {type: new GraphQLList(CountryType)}
   },
