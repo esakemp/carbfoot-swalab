@@ -9,6 +9,7 @@ export default gql`
         year
         population
         emissions
+        perCapita
       }
     }
   }

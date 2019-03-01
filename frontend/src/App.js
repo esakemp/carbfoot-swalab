@@ -7,6 +7,8 @@ import Search from './components/Search'
 import Country from './components/Country'
 import Top10 from './components/Top10'
 import YearDropdown from './components/YearDropdown'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import logo from './logo.png'
 
@@ -36,36 +38,49 @@ const styles = theme => ({
 })
 
 class App extends Component {
-  state = { selectedCountry: [], selectedYear: null }
+  state = {
+    countries: [],
+    selectedYear: null,
+    showCountries: false,
+    perCapita: false
+  }
 
   onSelectCountry = value => {
-    this.setState({ selectedCountry: value })
-    this.setState({ selectedYear: null })
+    this.setState({ countries: value, showCountries: true })
   }
+
   onSelectYear = value => {
-    this.setState({ selectedYear: value })
+    this.setState({ selectedYear: value, showCountries: false })
+  }
+
+  togglePerCapita = () => {
+    this.setState({ perCapita: !this.state.perCapita })
   }
 
   render() {
     const { classes } = this.props
-
+    const { countries, selectedYear, showCountries, perCapita } = this.state
     return (
       <div className={classes.main}>
         <ApolloProvider client={client}>
           <CssBaseline />
           <img src={logo} alt="carbfoot" className={classes.logo} />
           <Search onSelectCountry={this.onSelectCountry} />
-          {this.state.selectedCountry && (
-            <Country codes={this.state.selectedCountry} />
-          )}
-          {this.state.selectedCountry.length < 1 && (
-            <div>
-              <YearDropdown onSelectYear={this.onSelectYear} />
-              {this.state.selectedYear && (
-                <Top10 year={this.state.selectedYear} />
-              )}
-            </div>
-          )}
+          <YearDropdown onSelectYear={this.onSelectYear} />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={perCapita}
+                onChange={this.togglePerCapita}
+              />
+            }
+            label="Per Capita"
+          />
+          {
+            showCountries
+              ? (countries.length > 0) && <Country codes={countries} perCapita={perCapita} />
+              : selectedYear && <Top10 year={selectedYear} perCapita={perCapita} />
+          }
         </ApolloProvider>
       </div>
     )

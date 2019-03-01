@@ -9,7 +9,7 @@ export default gql`
         year
         population
         emissions
-        normalized
+        perCapita
       }
       perCapita {
         code
@@ -17,7 +17,7 @@ export default gql`
         year
         population
         emissions
-        normalized
+        perCapita
       }
     }
   }

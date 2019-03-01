@@ -188,7 +188,7 @@ class DownshiftMultiple extends Component {
                   )),
                   onChange: this.handleInputChange,
                   onKeyDown: this.handleKeyDown,
-                  placeholder: 'Select multiple countries',
+                  placeholder: 'Select Multiple Countries',
                 }),
                 label: 'Countries',
               })}

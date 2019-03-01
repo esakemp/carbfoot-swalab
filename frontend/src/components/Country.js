@@ -5,7 +5,7 @@ import SingleCountryGraph from './SingleCountryGraph'
 import MultiCountryGraph from './MultiCountryGraph'
 import fetchCountryWithList from '../queries/fetchCountryWithList'
 
-const getStatsFromData = ({ country }) => ({
+const getStatsFromData = ({ country }, perCapita) => ({
   country: country.name,
   population: country.stats.map(stat => ({
     x: parseInt(stat.year),
@@ -13,11 +13,11 @@ const getStatsFromData = ({ country }) => ({
   })),
   emissions: country.stats.map(stat => ({
     x: parseInt(stat.year),
-    y: stat.emissions,
+    y: perCapita ? stat.perCapita : stat.emissions,
   })),
 })
 
-function Country({ codes }) {
+const Country = ({ codes, perCapita }) => {
   return (
     <Query
       query={fetchCountryWithList}
@@ -37,7 +37,7 @@ function Country({ codes }) {
           },
         }))
 
-        const countryStats = countries.map(country => getStatsFromData(country))
+        const countryStats = countries.map(country => getStatsFromData(country, perCapita))
 
         if (countries.length > 1) {
           return (
