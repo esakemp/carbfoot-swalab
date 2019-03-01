@@ -1,16 +1,12 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import deburr from 'lodash/deburr'
 import Downshift from 'downshift'
-import { graphql } from 'react-apollo'
-import fetchAll from '../queries/fetchAll'
-
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import Chip from '@material-ui/core/Chip'
-
-var suggestions = []
 
 const styles = theme => ({
   root: {
@@ -86,7 +82,7 @@ function renderSuggestion({
   )
 }
 
-function getSuggestions(value) {
+function getSuggestions(suggestions, value) {
   const inputValue = deburr(value.trim()).toLowerCase()
   const inputLength = inputValue.length
   let count = 0
@@ -106,7 +102,7 @@ function getSuggestions(value) {
       })
 }
 
-class DownshiftMultiple extends Component {
+class Search extends Component {
   state = {
     inputValue: '',
     selectedItem: [],
@@ -153,7 +149,7 @@ class DownshiftMultiple extends Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, countries } = this.props
     const { inputValue, selectedItem } = this.state
     return (
       <div className={classes.root}>
@@ -194,7 +190,7 @@ class DownshiftMultiple extends Component {
               })}
               {isOpen ? (
                 <Paper className={classes.paper} square>
-                  {getSuggestions(inputValue2).map((suggestion, index) =>
+                  {getSuggestions(countries, inputValue2).map((suggestion, index) =>
                     renderSuggestion({
                       suggestion,
                       index,
@@ -217,16 +213,8 @@ class DownshiftMultiple extends Component {
   }
 }
 
-function Search({ classes, onSelectCountry, data: { countries = [] } }) {
-  suggestions = countries
-  return (
-    <div>
-      <DownshiftMultiple
-        classes={classes}
-        onSelectCountry={selectedItem => onSelectCountry(selectedItem)}
-      />
-    </div>
-  )
+Search.propTypes = {
+  countries: PropTypes.arrayOf(PropTypes.any)
 }
 
-export default graphql(fetchAll)(withStyles(styles)(Search))
+export default withStyles(styles)(Search)

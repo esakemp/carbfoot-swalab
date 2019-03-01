@@ -1,8 +1,5 @@
-import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
-import fetchYears from '../queries/fetchYears'
+import React from 'react'
 import PropTypes from 'prop-types'
-
 import { withStyles } from '@material-ui/core/styles'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -30,59 +27,38 @@ const styles = theme => ({
   },
 })
 
-class Dropdown extends Component {
-  state = { selectedYear: '' }
-  handleChange = event => {
-    this.setState({ selectedYear: event.target.value })
-    this.props.onSelectYear(event.target.value)
-  }
-  render() {
-    const { years } = this.props
-    const { classes } = this.props
-    return (
-      <div className={classes.root}>
-        <form className={classes.root} autoComplete="off">
-          <FormControl className={classes.formControl} fullWidth={true}>
-            <InputLabel htmlFor="selectedYear">Top Emissions For Year</InputLabel>
-            <Select
-              value={this.state.selectedYear}
-              onChange={this.handleChange}
-              fullWidth={true}
-              inputProps={{
-                year: 'selectedYear',
-              }}
-            >
-              {years.map(year => (
-                <MenuItem value={year} key={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </form>
-      </div>
-    )
-  }
-}
-
-Dropdown.propTypes = {
-  years: PropTypes.arrayOf(PropTypes.string),
-}
-
-Dropdown.defaultProps = {
-  years: [],
-}
-
-function YearDropdown({ classes, onSelectYear, data: { top10 = [] } }) {
-  const { year } = top10
+const Dropdown = ({ years, classes, onSelectYear, selectedYear }) => {
   return (
-    <div>
-      <Dropdown
-        classes={classes}
-        years={year}
-        onSelectYear={selectedItem => onSelectYear(selectedItem)}
-      />
+    <div className={classes.root}>
+      <form className={classes.root} autoComplete="off">
+        <FormControl className={classes.formControl} fullWidth={true}>
+          <InputLabel htmlFor="selectedYear">Top Emissions For Year</InputLabel>
+          <Select
+            value={selectedYear}
+            onChange={event => onSelectYear(event.target.value)}
+            fullWidth={true}
+            inputProps={{
+              year: 'selectedYear',
+            }}
+          >
+            {years.map(({ year }) => (
+              <MenuItem value={year} key={year}>
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </form>
     </div>
   )
 }
-export default graphql(fetchYears)(withStyles(styles)(YearDropdown))
+
+Dropdown.propTypes = {
+  years: PropTypes.arrayOf(PropTypes.shape({ year: PropTypes.string })),
+}
+
+Dropdown.defaultProps = {
+  years: []
+}
+
+export default withStyles(styles)(Dropdown)
