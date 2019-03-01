@@ -1,7 +1,7 @@
 const cron = require('node-cron')
 
 const {
-  CRONSTRING = '*/30 * * * * *', // Every 5 seconds,
+  CRONSTRING = '*/30 * * * *',
   POPULATION_POST_URL,
   EMISSION_POST_URL,
   POP_API_URL = 'http://api.worldbank.org/v2/en/indicator/SP.POP.TOTL?downloadformat=csv',
