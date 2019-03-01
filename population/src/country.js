@@ -37,11 +37,14 @@ const upsertAllCountryStats = async countries => {
 const findAllYears = async () => Statistics.find().distinct('year').exec()
 
 const addToTopTen = (top10 = [], id, value) => {
+  const entry = { id, value }
+  const split = top10.findIndex(elem => elem.value < value)
   if (top10.length === 0) {
-    return [{ id, value }]
+    return [entry]
+  } else if (split === -1 && top10.length < 10) {
+      return top10.concat(entry)
   } else {
-    const split = top10.findIndex(elem => elem.value < value)
-    return [ ...top10.slice(0, split), { id, value }, ...top10.slice(split, 9)]
+    return [ ...top10.slice(0, split), entry, ...top10.slice(split, 9)]
   }
 }
 
@@ -105,5 +108,8 @@ module.exports = {
   findAllYears,
   updateTop10Stats,
   getTop10,
-  getTop10All
+  getTop10All,
+  __private__: {
+    addToTopTen
+  }
 }

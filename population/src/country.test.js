@@ -6,7 +6,10 @@ const {
   findAllYears,
   updateTop10Stats,
   getTop10,
-  getTop10All
+  getTop10All,
+  __private__: {
+    addToTopTen
+  }
 } = require('./country')
 
 const { dbconnect, dbclose } = require('./db')
@@ -131,4 +134,23 @@ test('getTop10All() returns array with correct fields', async () => {
   expect(topstats.length).toBe(1)
   const topstat = topstats[0]
   expect(topstat).toHaveProperty('year')
+})
+
+test('addToTop() adds element to undefined array', () => {
+  const top10 = addToTopTen(undefined, 1, 1)
+  expect(top10).toEqual([{ id: 1, value: 1 }])
+})
+
+test('addToTop() only contains top 10 highest elements of 0, 1, ..., 10', () => {
+  const numbers = [...Array(11).keys()]
+  const top10 = numbers.reduce((acc, i) => addToTopTen(acc, i, i), [])
+  expect(top10[0]).toMatchObject({ id: 10, value: 10 })
+  expect(top10[9]).toMatchObject({ id: 1, value: 1 })
+})
+
+test('addToTop() only contains top 10 highest elements of 10, 0, 9, 1, ...', () => {
+  const reverse = [10, 0, 9, 1, 8, 2, 7, 3, 6, 4, 5]
+  const top10 = reverse.reduce((acc, i) => addToTopTen(acc, i, i), [])
+  expect(top10[0]).toMatchObject({ id: 10, value: 10 })
+  expect(top10[9]).toMatchObject({ id: 1, value: 1 })
 })
