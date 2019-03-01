@@ -22,7 +22,7 @@ const CountryType = new GraphQLObjectType({
     year: { type: GraphQLString },
     population: { type: GraphQLInt },
     emissions: { type: GraphQLFloat },
-    normalized: { type: GraphQLFloat },
+    perCapita: { type: GraphQLFloat },
   },
 })
 
