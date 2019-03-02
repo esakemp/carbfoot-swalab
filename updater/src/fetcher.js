@@ -7,7 +7,7 @@ const tmp = require('tmp')
 tmp.setGracefulCleanup()
 
 const downloadZip = (url, filepath) =>
-  new Promise(resolve => {
+  new Promise((resolve, reject) => {
     http.get(url, response => {
       response.on('data', data => {
         fs.appendFileSync(filepath, data)
@@ -15,6 +15,8 @@ const downloadZip = (url, filepath) =>
       response.on('end', () => {
         resolve()
       })
+    }).on('error', (err) => {
+      reject(err)
     })
   })
 
