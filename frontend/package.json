@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@highcharts/map-collection": "^1.1.2",
     "@material-ui/core": "^3.9.2",
     "apollo-boost": "^0.1.27",
     "axios": "^0.18.0",
@@ -15,6 +16,8 @@
     "react-apollo": "^2.4.1",
     "react-dom": "^16.7.0",
     "react-jsx-highcharts": "^3.4.0",
+    "react-jsx-highmaps": "^1.2.0",
+    "react-request": "^3.1.2",
     "react-router": "^4.3.1",
     "react-scripts": "^2.1.5"
   },
@@ -25,7 +28,9 @@
     "eject": "react-scripts eject",
     "standardize": "standard --fix",
     "check": "prettier --check './src/**/*.js'",
-    "write": "prettier --write './src/**/*.js'"
+    "write": "prettier --write './src/**/*.js'",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -38,6 +43,12 @@
   ],
   "devDependencies": {
     "prettier": "^1.16.4",
-    "standard": "^12.0.1"
+    "standard": "^12.0.1",
+    "@storybook/react": "^4.1.13",
+    "@storybook/addon-actions": "^4.1.13",
+    "@storybook/addon-links": "^4.1.13",
+    "@storybook/addons": "^4.1.13",
+    "@babel/core": "^7.3.4",
+    "babel-loader": "^8.0.5"
   }
 }

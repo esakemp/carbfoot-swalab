@@ -2,13 +2,14 @@ import React from 'react'
 import { Query } from 'react-apollo'
 import top10 from '../queries/fetchTop10'
 import Top10Graph from './Top10Graph'
+import EmissionsMap from './EmissionsMap'
 
 const formatEmissions = emissions => {
-  return emissions.map(({ name, emissions: y }) => ({ name, y }))
+  return emissions.map(({ name, code, emissions: y }) => ({ name, code, y }))
 }
 
 const formatPerCapita = emissions => {
-  return emissions.map(({ name, perCapita: y }) => ({ name, y }))
+  return emissions.map(({ name, code, perCapita: y }) => ({ name, code, y }))
 }
 
 const formatDataToSeries = ({ top10 }, usePerCapita) => {
@@ -25,8 +26,12 @@ function Top10({ year, perCapita }) {
         if (loading) return null
         if (error) return `error! ${error.message}`
         const series = formatDataToSeries(data, perCapita)
+        const mapdata = series.map(({ code, y: value }) => ({ code, value }))
         return (
-          <Top10Graph series={series} year={year} />
+          <React.Fragment>
+            <Top10Graph series={series} year={year} />
+            <EmissionsMap data={mapdata} />
+          </React.Fragment>
         )
       }}
     </Query>
