@@ -9,7 +9,8 @@ const {
   getTop10All,
   __private__: {
     addToTopTen
-  }
+  },
+  upsertAllCountryStats
 } = require('./country')
 
 const { dbconnect, dbclose } = require('./db')
@@ -148,8 +149,8 @@ test('addToTop() only contains top 10 highest elements of 0, 1, ..., 10', () => 
   expect(top10[9]).toMatchObject({ id: 1, value: 1 })
 })
 
-test('addToTop() only contains top 10 highest elements of 10, 0, 9, 1, ...', () => {
-  const reverse = [10, 0, 9, 1, 8, 2, 7, 3, 6, 4, 5]
+test.only('addToTop() only contains top 10 highest elements of 10, 0, 9, 1, ...', () => {
+  const reverse = [10, 0, 9, 1, 8, 2, 7, 3, 6, 4, 5, 0, 0, 0, 0]
   const top10 = reverse.reduce((acc, i) => addToTopTen(acc, i, i), [])
   expect(top10[0]).toMatchObject({ id: 10, value: 10 })
   expect(top10[9]).toMatchObject({ id: 1, value: 1 })

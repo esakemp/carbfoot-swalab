@@ -39,9 +39,10 @@ const findAllYears = async () => Statistics.find().distinct('year').exec()
 const addToTopTen = (top10 = [], id, value) => {
   const entry = { id, value }
   const split = top10.findIndex(elem => elem.value < value)
+  console.log(top10, split, value)
   if (top10.length === 0) {
     return [entry]
-  } else if (split === -1 && top10.length < 10) {
+  } else if (split === -1 && top10.length <= 10) {
       return top10.concat(entry)
   } else {
     return [ ...top10.slice(0, split), entry, ...top10.slice(split, 9)]
