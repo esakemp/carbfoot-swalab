@@ -154,4 +154,5 @@ test.only('addToTop() only contains top 10 highest elements of 10, 0, 9, 1, ...'
   const top10 = reverse.reduce((acc, i) => addToTopTen(acc, i, i), [])
   expect(top10[0]).toMatchObject({ id: 10, value: 10 })
   expect(top10[9]).toMatchObject({ id: 1, value: 1 })
+  expect(top10.length).toBe(10)
 })
