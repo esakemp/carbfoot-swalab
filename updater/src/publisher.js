@@ -5,7 +5,7 @@ const publishPopulations = async data => {
   try {
     await axios.post(POPULATION_POST_URL, data)
   } catch (e) {
-    console.error('Publishing new populations failed', e)
+    console.error('Publishing new populations failed')
   }
 }
 
@@ -13,7 +13,7 @@ const publishEmissions = async data => {
   try {
     await axios.post(EMISSION_POST_URL, data)
   } catch (e) {
-    console.error('Publishing new emissions failed', e)
+    console.error('Publishing new emissions failed')
   }
 }
 

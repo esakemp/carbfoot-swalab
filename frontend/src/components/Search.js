@@ -82,7 +82,9 @@ function renderSuggestion({
   )
 }
 
-function getSuggestions(suggestions, value) {
+function getSuggestions(suggestions, value, selectedItem) {
+
+  const codes = selectedItem.map(country => country.code)
   const inputValue = deburr(value.trim()).toLowerCase()
   const inputLength = inputValue.length
   let count = 0
@@ -90,16 +92,17 @@ function getSuggestions(suggestions, value) {
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.name.slice(0, inputLength).toLowerCase() === inputValue
+      const keep =
+        count < 5 &&
+        suggestion.name.slice(0, inputLength).toLowerCase() === inputValue &&
+        codes.includes(suggestion.code) === false
 
-        if (keep) {
-          count += 1
-        }
+      if (keep) {
+        count += 1
+      }
 
-        return keep
-      })
+      return keep
+    })
 }
 
 class Search extends Component {
@@ -168,45 +171,45 @@ class Search extends Component {
             selectedItem: selectedItem2,
             highlightedIndex,
           }) => (
-            <div className={classes.container}>
-              {renderInput({
-                fullWidth: true,
-                classes,
-                InputProps: getInputProps({
-                  startAdornment: selectedItem.map(item => (
-                    <Chip
-                      key={item.code}
-                      className={classes.chip}
-                      tabIndex={-1}
-                      label={item.name}
-                      onDelete={this.handleDelete(item)}
-                    />
-                  )),
-                  onChange: this.handleInputChange,
-                  onKeyDown: this.handleKeyDown,
-                  placeholder: 'Select Multiple Countries',
-                }),
-                label: 'Countries',
-              })}
-              {isOpen ? (
-                <Paper className={classes.paper} square>
-                  {getSuggestions(countries, inputValue2).map((suggestion, index) =>
-                    renderSuggestion({
-                      suggestion,
-                      index,
-                      itemProps: getItemProps({
-                        item: suggestion,
+              <div className={classes.container}>
+                {renderInput({
+                  fullWidth: true,
+                  classes,
+                  InputProps: getInputProps({
+                    startAdornment: selectedItem.map(item => (
+                      <Chip
+                        key={item.code}
+                        className={classes.chip}
+                        tabIndex={-1}
+                        label={item.name}
+                        onDelete={this.handleDelete(item)}
+                      />
+                    )),
+                    onChange: this.handleInputChange,
+                    onKeyDown: this.handleKeyDown,
+                    placeholder: 'Select Multiple Countries',
+                  }),
+                  label: 'Countries',
+                })}
+                {isOpen ? (
+                  <Paper className={classes.paper} square>
+                    {getSuggestions(countries, inputValue2, selectedItem).map((suggestion, index) =>
+                      renderSuggestion({
+                        suggestion,
                         index,
-                        key: suggestion.code,
-                      }),
-                      highlightedIndex,
-                      selectedItem: selectedItem2,
-                    })
-                  )}
-                </Paper>
-              ) : null}
-            </div>
-          )}
+                        itemProps: getItemProps({
+                          item: suggestion,
+                          index,
+                          key: suggestion.code,
+                        }),
+                        highlightedIndex,
+                        selectedItem: selectedItem2,
+                      })
+                    )}
+                  </Paper>
+                ) : null}
+              </div>
+            )}
         </Downshift>
       </div>
     )

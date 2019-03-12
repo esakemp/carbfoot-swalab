@@ -29,7 +29,7 @@ const updatePopulations = async () => {
     const records = await recordsFromCsvStream(stream, 'population')
     await publishPopulations(records)
   } catch (e) {
-    console.error('Updating populations failed', e)
+    console.error('Updating populations failed')
   }
 }
 
@@ -39,7 +39,7 @@ const updateCo2 = async () => {
     const records = await recordsFromCsvStream(stream, 'emissions')
     await publishEmissions(records)
   } catch (e) {
-    console.error('Updating emissions failed', e)
+    console.error('Updating emissions failed')
   }
 }
 
