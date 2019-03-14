@@ -1,9 +1,7 @@
 import React from 'react'
-import { Query } from 'react-apollo'
 
 import SingleCountryGraph from './SingleCountryGraph'
 import MultiCountryGraph from './MultiCountryGraph'
-import fetchCountryWithList from '../queries/fetchCountryWithList'
 
 const getStatsFromData = ({ country }, perCapita) => ({
   country: country.name,
@@ -17,46 +15,25 @@ const getStatsFromData = ({ country }, perCapita) => ({
   })),
 })
 
-const Country = ({ codes, perCapita }) => {
-  return (
-    <Query
-      query={fetchCountryWithList}
-      variables={{ codes }}
-      notifyOnNetworkStatusChange
-    >
-      {({ loading, error, data, networkStatus }) => {
-        if (networkStatus === 4) return 'refetching'
-        if (loading) return null
-        if (error) return `error! ${error.message}`
+const Country = ({ countries, perCapita }) => {
+  
+  const countryStats = countries.map(country => getStatsFromData(country, perCapita))
 
-        const countries = data.countries.map(country => ({
-          country: {
-            name: country.name,
-            code: country.code,
-            stats: country.stats,
-          },
-        }))
-
-        const countryStats = countries.map(country => getStatsFromData(country, perCapita))
-
-        if (countries.length > 1) {
-          return (
-            <div>
-              <MultiCountryGraph statsArray={countryStats} />
-            </div>
-          )
-        } else if (countries.length === 1) {
-          return (
-            <div>
-              <SingleCountryGraph stats={countryStats[0]} />
-            </div>
-          )
-        } else {
-          return <div />
-        }
-      }}
-    </Query>
-  )
+  if (countries.length > 1) {
+    return (
+      <div>
+        <MultiCountryGraph statsArray={countryStats} />
+      </div>
+    )
+  } else if (countries.length === 1) {
+    return (
+      <div>
+        <SingleCountryGraph stats={countryStats[0]} />
+      </div>
+    )
+  } else {
+    return <div />
+  }
 }
 
 export default Country

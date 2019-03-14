@@ -8,8 +8,9 @@ import Country from './Country'
 import Top10 from './Top10'
 import YearDropdown from './YearDropdown'
 import fetchFormData from '../queries/fetchFormData'
-
+import fetchCountryData from '../queries/fetchCountryData'
 import logo from '../logo.png'
+const { createApolloFetch } = require('apollo-fetch')
 
 const styles = theme => ({
   main: {
@@ -39,18 +40,38 @@ class App extends Component {
     selectedYear: '',
     showCountries: false,
     perCapita: false,
+    queriedCountries: [],
   }
 
   static getDerivedStateFromProps({ data: { top10List = [] } }, state) {
-      if (!state.selectedYear && top10List.length > 0) {
-        const { year } = top10List[0]
-        return { ...state, selectedYear: year}
-      }
-      return null
+    if (!state.selectedYear && top10List.length > 0) {
+      const { year } = top10List[0]
+      return { ...state, selectedYear: year }
+    }
+    return null
+  }
+  
+  fetchData = codes => {
+    const fetch = createApolloFetch({
+      uri: 'http://localhost:8000/graphql',
+    })
+    fetch({
+      query: fetchCountryData,
+      variables: { codes: codes }
+    }).then(res => this.setState({
+      queriedCountries: res.data.countries.map(country => ({
+        country: {
+          name: country.name,
+          code: country.code,
+          stats: country.stats,
+        },
+      }))
+    }))
   }
 
   onSelectCountry = value => {
     this.setState({ selectedCountries: value, showCountries: true })
+    this.fetchData(value)
   }
 
   onSelectYear = value => {
@@ -71,17 +92,18 @@ class App extends Component {
       selectedYear,
       showCountries,
       perCapita,
+      queriedCountries,
     } = this.state
     return (
       <div className={classes.main}>
         <img src={logo} alt="carbfoot" className={classes.logo} />
         <Search
           onSelectCountry={this.onSelectCountry}
-          countries={countries || []}
+          countries={countries || []}
         />
         <YearDropdown
           selectedYear={selectedYear}
-          years={years || []}
+          years={years || []}
           onSelectYear={this.onSelectYear}
         />
         <FormControlLabel
@@ -92,8 +114,8 @@ class App extends Component {
         />
         {showCountries
           ? selectedCountries.length > 0 && (
-              <Country codes={selectedCountries} perCapita={perCapita} />
-            )
+            <Country countries={queriedCountries} perCapita={perCapita} />
+          )
           : selectedYear && <Top10 year={selectedYear} perCapita={perCapita} />}
       </div>
     )
