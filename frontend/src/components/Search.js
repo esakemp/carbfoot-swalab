@@ -121,6 +121,7 @@ class Search extends Component {
       this.setState({
         selectedItem: selectedItem.slice(0, selectedItem.length - 1),
       })
+      this.props.onDeleteCountry()
     }
   }
 

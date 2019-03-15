@@ -1,5 +1,4 @@
 import React from 'react'
-
 import SingleCountryGraph from './SingleCountryGraph'
 import MultiCountryGraph from './MultiCountryGraph'
 
@@ -16,23 +15,21 @@ const getStatsFromData = ({ country }, perCapita) => ({
 })
 
 const Country = ({ countries, perCapita }) => {
-  
+  console.log(countries)
   const countryStats = countries.map(country => getStatsFromData(country, perCapita))
-
+  console.log(countryStats)
   if (countries.length > 1) {
     return (
       <div>
         <MultiCountryGraph statsArray={countryStats} />
       </div>
     )
-  } else if (countries.length === 1) {
+  } else {
     return (
       <div>
         <SingleCountryGraph stats={countryStats[0]} />
       </div>
     )
-  } else {
-    return <div />
   }
 }
 
