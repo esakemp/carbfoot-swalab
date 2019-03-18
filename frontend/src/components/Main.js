@@ -71,12 +71,6 @@ class App extends Component {
       this.setState({ showCountries: false, })
     }
   }
-  onDeleteCountry = () => {
-    const { queriedCountries } = this.state
-    this.setState({
-      queriedCountries: queriedCountries.splice(0, queriedCountries.length - 1)
-    })
-  }
 
   onSelectYear = value => {
     this.setState({ selectedYear: value, showCountries: false })
@@ -103,7 +97,6 @@ class App extends Component {
         <Search
           onSelectCountry={this.onSelectCountry}
           countries={countries || []}
-          onDeleteCountry={this.onDeleteCountry}
         />
         <YearDropdown
           selectedYear={selectedYear}

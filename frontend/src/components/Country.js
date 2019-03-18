@@ -15,9 +15,13 @@ const getStatsFromData = ({ country }, perCapita) => ({
 })
 
 const Country = ({ countries, perCapita }) => {
-  console.log(countries)
   const countryStats = countries.map(country => getStatsFromData(country, perCapita))
-  console.log(countryStats)
+
+  countryStats.forEach(country => {
+    country.emissions.sort((e1, e2) => e1.x - e2.x)
+    country.population.sort((p1, p2) => p1.x - p2.x)
+  })
+
   if (countries.length > 1) {
     return (
       <div>

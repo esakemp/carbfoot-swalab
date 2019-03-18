@@ -110,6 +110,15 @@ class Search extends Component {
     inputValue: '',
     selectedItem: [],
   }
+  
+  deleteItem = (item) => {
+    this.setState(state => {
+      const selectedItem = [...state.selectedItem]
+      selectedItem.splice(selectedItem.indexOf(item), 1)
+      this.props.onSelectCountry(selectedItem.map(country => country.code))
+      return { selectedItem }
+    })
+  }
 
   handleKeyDown = event => {
     const { inputValue, selectedItem } = this.state
@@ -118,10 +127,8 @@ class Search extends Component {
       !inputValue.length &&
       event.key === 'Backspace'
     ) {
-      this.setState({
-        selectedItem: selectedItem.slice(0, selectedItem.length - 1),
-      })
-      this.props.onDeleteCountry()
+      const item = selectedItem[selectedItem.length - 1]
+      this.deleteItem(item)
     }
   }
 
@@ -144,12 +151,7 @@ class Search extends Component {
   }
 
   handleDelete = item => () => {
-    this.setState(state => {
-      const selectedItem = [...state.selectedItem]
-      selectedItem.splice(selectedItem.indexOf(item), 1)
-      this.props.onSelectCountry(selectedItem.map(country => country.code))
-      return { selectedItem }
-    })
+    this.deleteItem(item)
   }
 
   render() {
@@ -158,7 +160,6 @@ class Search extends Component {
     return (
       <div className={classes.root}>
         <Downshift
-          id="downshift-multiple"
           inputValue={inputValue}
           onChange={this.handleChange}
           selectedItem={selectedItem}
